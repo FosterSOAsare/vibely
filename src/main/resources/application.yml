@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: vibely
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vibely?createDatabaseIfNotExist=true
+    username: postgres
+    password: Str0ngPa$$w0rd
+  jpa:
+    show-sql: true
