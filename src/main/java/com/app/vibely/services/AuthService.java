@@ -1,26 +1,18 @@
 package com.app.vibely.services;
 
-import com.app.vibely.dtos.LoginRequest;
-import com.app.vibely.dtos.LoginResponse;
-import com.app.vibely.dtos.RegisterUserRequest;
-import com.app.vibely.dtos.UserDto;
+import com.app.vibely.dtos.*;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.DuplicateUserException;
 import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Service responsible for authentication-related operations such as login,
@@ -59,16 +51,10 @@ public class AuthService {
      */
     public LoginResponse login(LoginRequest request) {
         // Authenticate the credentials using Spring Security
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getIdentifier(), request.getPassword()));
 
         // If authentication succeeds, fetch the user and generate tokens
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        User user = userRepository.findByUsernameOrEmail(request.getIdentifier()).orElseThrow(() -> new RuntimeException("User not found after authentication"));
         System.out.println("user" + user);
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -107,6 +93,23 @@ public class AuthService {
         userRepository.save(user);
 
         return userMapper.toDto(user);
+    }
+
+    public void changeUserPassword(Integer user_id , ChangeUserPasswordRequest request){
+        //  Get user
+        User user = userRepository.findById(user_id).orElseThrow();
+
+        //  Compare user password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        //  Change password
+        String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
+        user.setPassword(newEncodedPassword);
+
+        //  Save user
+        userRepository.save(user);
     }
 
 

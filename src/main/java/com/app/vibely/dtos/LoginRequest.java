@@ -8,9 +8,8 @@ import lombok.Data;
 
 @Data
 public class LoginRequest {
-    @NotBlank(message = "Email is required")
-    @Email
-    private String email;
+    @NotBlank(message = "Email/username is required")
+    private String identifier;
 
     @NotBlank(message = "Password is required" )
     @Size(min = 8 , message = "Password must be at least 8 characters long")

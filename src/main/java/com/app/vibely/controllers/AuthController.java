@@ -1,13 +1,11 @@
 package com.app.vibely.controllers;
 
 import com.app.vibely.config.JwtConfig;
-import com.app.vibely.dtos.LoginRequest;
-import com.app.vibely.dtos.RegisterUserRequest;
-import com.app.vibely.dtos.UserDto;
+import com.app.vibely.dtos.*;
+import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.DuplicateUserException;
 import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.services.AuthService;
-import com.app.vibely.dtos.JwtResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -75,10 +73,21 @@ public class AuthController {
         return ResponseEntity.ok(userDto);
     }
 
+    @PutMapping("change-password")
+    public ResponseEntity<?> changeUserPassword(
+            @Valid @RequestBody ChangeUserPasswordRequest request,
+            UriComponentsBuilder uriBuilder) {
+        User user = authService.getCurrentUser();
+        authService.changeUserPassword(user.getId() , request) ;
+        UserDto userDto = userMapper.toDto(user);
+        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(userDto);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, String>> handleBadCredentialsException() {
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Invalid email or password");
+        error.put("error", "Invalid credentials");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
