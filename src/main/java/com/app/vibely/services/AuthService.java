@@ -93,6 +93,8 @@ public class AuthService {
         return jwtService.generateAccessToken(user);
     }
 
+
+
     public UserDto registerUser(RegisterUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateUserException("The provide email already exists");

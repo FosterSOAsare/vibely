@@ -16,6 +16,8 @@ public class JwtConfig {
     private int refreshTokenExpiration;
 
     public SecretKey getSecretKey() {
+        System.out.println("secret: " + secret);
+
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 }

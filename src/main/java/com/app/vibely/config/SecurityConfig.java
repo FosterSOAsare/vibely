@@ -5,8 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -44,11 +42,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http ,  JwtAuthenticationFilter jwtFilter) throws Exception {
         http
                 .sessionManagement(c ->
                         c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(c -> {
                     // Define specific public endpoints here
                     c.requestMatchers("/api/auth/**", "/public/**").permitAll();
@@ -60,16 +59,11 @@ public class SecurityConfig {
                     // 401 Unauthorized: user not logged in or token missing/invalid
                     c.authenticationEntryPoint((request, response, authException) -> {
                         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//                        response.setContentType("application/json");
-//                        response.getWriter().write("{\"message\": \"Unauthorized: Please login first\"}");
                     });
 
                     // 403 Forbidden: user is logged in but lacks permission
                     c.accessDeniedHandler((request, response, accessDeniedException) -> {
-                        response.setStatus(HttpStatus.FORBIDDEN.value());
-//                        response.setContentType("application/json");
-//                        response.getWriter().write("{\"message\": \"Forbidden: You don't have access to this resource\"}");
-                    });
+                        response.setStatus(HttpStatus.FORBIDDEN.value());                     });
                 });
 
         return http.build();
