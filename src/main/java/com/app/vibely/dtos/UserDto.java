@@ -30,5 +30,5 @@ public class UserDto {
     private boolean isFollowing;
 
 //    Add other fields here
-    // isFollowed ,  notifications , followers , followings , saved_posts
+    // isFollowed ,  notifications
 }
