@@ -49,6 +49,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(c -> {
+                    // ⛔ Require auth for specific endpoints first
+                    c.requestMatchers("/api/auth/me", "/api/auth/change-password").authenticated();
+
                     // Define specific public endpoints here
                     c.requestMatchers("/api/auth/**", "/public/**").permitAll();
 

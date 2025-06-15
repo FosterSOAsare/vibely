@@ -4,6 +4,7 @@ import com.app.vibely.config.JwtConfig;
 import com.app.vibely.dtos.LoginRequest;
 import com.app.vibely.dtos.RegisterUserRequest;
 import com.app.vibely.dtos.UserDto;
+import com.app.vibely.exceptions.DuplicateUserException;
 import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.services.AuthService;
 import com.app.vibely.dtos.JwtResponse;
@@ -78,6 +79,13 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> handleBadCredentialsException() {
         Map<String, String> error = new HashMap<>();
         error.put("error", "Invalid email or password");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateUserException(Exception e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 

@@ -1,21 +1,20 @@
 package com.app.vibely.controllers;
 
-import com.app.vibely.dtos.UserDto;
+import com.app.vibely.dtos.*;
 import com.app.vibely.entities.User;
 import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.repositories.UserRepository;
 import com.app.vibely.services.AuthService;
+import com.app.vibely.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Map;
+
 
 
 @RestController
@@ -26,6 +25,7 @@ public class UserController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AuthService authService;
+    private final UserService userService;
 
     @GetMapping("")
     public Iterable<UserDto> getAllUsers() {
@@ -38,10 +38,46 @@ public class UserController {
     public ResponseEntity<?> me() {
         var user = authService.getCurrentUser();
 
-        System.out.println("User " + user);
-
         var userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
+    }
+
+    @PutMapping("/profile/name")
+    public ResponseEntity<?> editName(@Valid @RequestBody EditNameRequest request, UriComponentsBuilder uriBuilder){
+        // Get name and logged-in user
+        var user = authService.getCurrentUser();
+        User updatedUser = userService.editName(request , user.getId());
+        return ResponseEntity.ok(userMapper.toDto(updatedUser));
+    }
+
+    @PutMapping("/profile/gender")
+    public ResponseEntity<?> editGender(@Valid @RequestBody EditGenderRequest request, UriComponentsBuilder uriBuilder){
+        // Get name and logged-in user
+        var user = authService.getCurrentUser();
+
+//        Check gender value
+        User updatedUser = userService.editGender(request , user.getId());
+        return ResponseEntity.ok(userMapper.toDto(updatedUser));
+    }
+
+    @PutMapping("/profile/bio")
+    public ResponseEntity<?> editBio(@Valid @RequestBody EditBioRequest request, UriComponentsBuilder uriBuilder){
+        // Get name and logged-in user
+        var user = authService.getCurrentUser();
+
+//        Check gender value
+        User updatedUser = userService.editBio(request , user.getId());
+        return ResponseEntity.ok(userMapper.toDto(updatedUser));
+    }
+
+    @PutMapping("/profile/profile_picture")
+    public ResponseEntity<?> editProfilePicture(@Valid @RequestBody EditProfilePictureRequest request, UriComponentsBuilder uriBuilder){
+        // Get name and logged-in user
+        var user = authService.getCurrentUser();
+
+//        Check gender value
+        User updatedUser = userService.editProfilePicture(request , user.getId());
+        return ResponseEntity.ok(userMapper.toDto(updatedUser));
     }
 
     @GetMapping("/{user_id}")
