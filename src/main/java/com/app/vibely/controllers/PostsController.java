@@ -36,7 +36,8 @@ public class PostsController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
-        List<PostDto> posts = postService.getAllPosts(page, size);
+        User user = authService.getCurrentUser();
+        List<PostDto> posts = postService.getAllPosts(page, size , user.getId());
         return ResponseEntity.ok(posts);
     }
 

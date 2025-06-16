@@ -28,10 +28,18 @@ public class PostService {
     private final UserRepository userRepository;
 
     // Get all posts with pagination, newest first
-    public List<PostDto> getAllPosts(int page, int size) {
+    public List<PostDto> getAllPosts(int page, int size , Integer userId ) {
         Pageable pageable = PageRequest.of(page, size);
         List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
-        return posts.stream().map(postMapper::toDto).collect(Collectors.toList());
+
+        return posts.stream().map(post -> {
+            PostDto dto = postMapper.toDto(post);
+
+            // Check if user liked this post
+            dto.setIsLiked(post.isLiked(userId));
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     // Get posts by userId with optional startId (load more pattern)
