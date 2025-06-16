@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class PostService {
 
     // Get all posts with pagination, newest first
     public PagedResponse<PostDto> getAllPosts(int page, int size , Integer userId ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size , Sort.by("id").descending());
         Page<Post> postsPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
 
         List<PostDto> postDtos = postsPage.stream().map(post -> {
@@ -43,13 +44,7 @@ public class PostService {
             return dto;
         }).toList();
 
-        return new PagedResponse<PostDto>(postDtos, page, size,
-                postsPage.getTotalElements(),
-                postsPage.getTotalPages(),
-                postsPage.hasNext(),
-                postsPage.hasPrevious());
-
-
+        return new PagedResponse<PostDto>(postDtos, page, size, postsPage.getTotalElements(), postsPage.getTotalPages(), postsPage.hasNext(), postsPage.hasPrevious());
     }
 
     // Get posts by userId with optional startId (load more pattern)

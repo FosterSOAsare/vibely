@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,19 +51,14 @@ public class UserService {
 
     // ✅ Get users with pagination
     public PagedResponse<UserDto> getUsers(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size , Sort.by("id").ascending());
         Page<User> usersPage = userRepository.findAll(pageable);
 
-        // Convert user to userdto
+        // Convert user to userDto
         List<UserDto> dtos = usersPage.getContent().stream()
                 .map(userMapper::toDto)
                 .toList();
 
-
-        return new PagedResponse<UserDto>(dtos, page, size,
-                usersPage.getTotalElements(),
-                usersPage.getTotalPages(),
-                usersPage.hasNext(),
-                usersPage.hasPrevious());
+        return new PagedResponse<UserDto>(dtos, page, size, usersPage.getTotalElements(), usersPage.getTotalPages(), usersPage.hasNext(), usersPage.hasPrevious());
     }
 }

@@ -38,7 +38,7 @@ public class PostsController {
             @RequestParam(defaultValue = "20") int size
     ) {
         User user = authService.getCurrentUser();
-        PagedResponse<PostDto> posts = postService.getAllPosts(page, size , user.getId());
+        PagedResponse<PostDto> posts = postService.getAllPosts(page, size , user.getId() );
         return ResponseEntity.ok(posts);
     }
 

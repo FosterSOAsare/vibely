@@ -1,5 +1,6 @@
 package com.app.vibely.controllers;
 
+import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.PostCommentsDto;
 import com.app.vibely.entities.Comment;
 import com.app.vibely.entities.Post;
@@ -35,14 +36,10 @@ public class PostCommentsController {
     }
 
     // 📥 Get comments by post ID
-    @GetMapping
-    public ResponseEntity<List<PostCommentsDto>> getCommentsByPostId(@PathVariable Integer postId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
-        List<Comment> comments = postCommentsService.getCommentsByPostId(postId, page, size);
-        List<PostCommentsDto> commentDtos = comments.stream()
-                .map(commentMapper::toDto)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(commentDtos);
+    @GetMapping("")
+    public ResponseEntity<PagedResponse<PostCommentsDto>> getCommentsByPostId(@PathVariable Integer postId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
+        PagedResponse<PostCommentsDto> comments = postCommentsService.getCommentsByPostId(postId, page, size);
+        return ResponseEntity.ok(comments);
     }
 
 
