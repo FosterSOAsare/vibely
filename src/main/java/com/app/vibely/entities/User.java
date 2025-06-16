@@ -48,28 +48,13 @@ public class User {
     private Instant createdAt;
 
     @OneToMany(mappedBy = "user")
-    private Set<Bookmark> bookmarks = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<CommentLike> commentLikes = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<Comment> comments = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<EventComment> eventComments = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<EventLike> eventLikes = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<EventSave> eventSaves = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
-    private Set<Event> events = new LinkedHashSet<>();
+    private Set<Bookmark> bookmarks = new LinkedHashSet<>() ;
 
     @OneToMany(mappedBy = "following")
-    private Set<Follow> follows = new LinkedHashSet<>();
+    private Set<Follow> followers = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "follower")
+    private Set<Follow> followings = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<Like> likes = new LinkedHashSet<>();
@@ -80,10 +65,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Post> posts = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<SavedPost> savedPosts = new LinkedHashSet<>();
+    public int calculateFollowers(){
+        return this.followers.size();
+    }
 
-    @OneToMany(mappedBy = "user")
-    private Set<Story> stories = new LinkedHashSet<>();
+    public int calculateFollowings(){
+        return this.followings.size();
+    }
 
 }
