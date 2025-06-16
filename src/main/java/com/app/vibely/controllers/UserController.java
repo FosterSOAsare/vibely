@@ -1,6 +1,8 @@
 package com.app.vibely.controllers;
 
+import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.*;
+import com.app.vibely.entities.Comment;
 import com.app.vibely.entities.User;
 import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.repositories.UserRepository;
@@ -14,7 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -28,10 +31,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public Iterable<UserDto> getAllUsers() {
-        return  userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto).toList();
+    public ResponseEntity<PagedResponse<UserDto>> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
+        PagedResponse<UserDto> userDtos = userService.getUsers(page, size);
+        return ResponseEntity.ok(userDtos);
     }
 
     @GetMapping("/profile")
@@ -40,6 +42,7 @@ public class UserController {
 
         var userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
+
     }
 
     @PutMapping("/profile/name")
@@ -90,9 +93,4 @@ public class UserController {
             return ResponseEntity.ok(userMapper.toDto(user));
         }
     }
-
-
-
-//    Next steps: edit bio , username , name , gender , profile picture
-//
 }

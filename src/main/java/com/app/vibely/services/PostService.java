@@ -35,8 +35,9 @@ public class PostService {
         return posts.stream().map(post -> {
             PostDto dto = postMapper.toDto(post);
 
-            // Check if user liked this post
+            // Check if user liked or saved this post
             dto.setIsLiked(post.isLiked(userId));
+            dto.setIsSaved(post.isSaved(userId));
 
             return dto;
         }).collect(Collectors.toList());
