@@ -41,4 +41,8 @@ public class Comment {
     @OneToMany(mappedBy = "comment")
     private Set<CommentLike> commentLikes = new LinkedHashSet<>();
 
+    public Integer getLikesCount(){
+        return this.commentLikes.size();
+    }
+
 }

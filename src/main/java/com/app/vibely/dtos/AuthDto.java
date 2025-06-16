@@ -1,6 +1,9 @@
 package com.app.vibely.dtos;
 
-import org.mapstruct.Mapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 public class AuthDto {

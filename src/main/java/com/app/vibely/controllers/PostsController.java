@@ -4,15 +4,22 @@ import com.app.vibely.dtos.CreatePostRequest;
 import com.app.vibely.dtos.PostDto;
 import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
+import com.app.vibely.exceptions.DuplicateUserException;
+import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.services.AuthService;
 import com.app.vibely.services.PostService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -33,7 +40,7 @@ public class PostsController {
         return ResponseEntity.ok(posts);
     }
 
-    // Get posts by user ID with optional start ID (for "load more")
+    // Get posts by user ID with optional start ID (for "load more") - Refactors waiting
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<PostDto>> getPostsByUser(
             @PathVariable Integer userId,
@@ -48,7 +55,9 @@ public class PostsController {
     // Delete post by ID
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Integer postId) {
-        postService.deletePostById(postId);
+        User user = authService.getCurrentUser();
+
+        postService.deletePostById(postId , user.getId()) ;
         return ResponseEntity.noContent().build();
     }
 
@@ -60,6 +69,9 @@ public class PostsController {
         postDto.setIsSaved(false);
         return ResponseEntity.ok(postDto);
     }
+
+
+
 
 
 }
