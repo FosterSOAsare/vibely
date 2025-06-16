@@ -1,5 +1,6 @@
 package com.app.vibely.controllers;
 
+import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.CreatePostRequest;
 import com.app.vibely.dtos.PostDto;
 import com.app.vibely.entities.Post;
@@ -32,12 +33,12 @@ public class PostsController {
 
     // Get all posts with pagination
     @GetMapping
-    public ResponseEntity<List<PostDto>> getAllPosts(
+    public ResponseEntity<PagedResponse<PostDto>> getAllPosts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
         User user = authService.getCurrentUser();
-        List<PostDto> posts = postService.getAllPosts(page, size , user.getId());
+        PagedResponse<PostDto> posts = postService.getAllPosts(page, size , user.getId());
         return ResponseEntity.ok(posts);
     }
 

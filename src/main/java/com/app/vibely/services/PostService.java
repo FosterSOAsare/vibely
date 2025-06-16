@@ -1,7 +1,9 @@
 package com.app.vibely.services;
 
+import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.CreatePostRequest;
 import com.app.vibely.dtos.PostDto;
+import com.app.vibely.dtos.UserDto;
 import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
@@ -9,6 +11,7 @@ import com.app.vibely.mappers.PostMapper;
 import com.app.vibely.repositories.PostRepository;
 import com.app.vibely.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,19 +31,25 @@ public class PostService {
     private final UserRepository userRepository;
 
     // Get all posts with pagination, newest first
-    public List<PostDto> getAllPosts(int page, int size , Integer userId ) {
+    public PagedResponse<PostDto> getAllPosts(int page, int size , Integer userId ) {
         Pageable pageable = PageRequest.of(page, size);
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+        Page<Post> postsPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
 
-        return posts.stream().map(post -> {
+        List<PostDto> postDtos = postsPage.stream().map(post -> {
             PostDto dto = postMapper.toDto(post);
-
             // Check if user liked or saved this post
             dto.setIsLiked(post.isLiked(userId));
             dto.setIsSaved(post.isSaved(userId));
-
             return dto;
-        }).collect(Collectors.toList());
+        }).toList();
+
+        return new PagedResponse<PostDto>(postDtos, page, size,
+                postsPage.getTotalElements(),
+                postsPage.getTotalPages(),
+                postsPage.hasNext(),
+                postsPage.hasPrevious());
+
+
     }
 
     // Get posts by userId with optional startId (load more pattern)
