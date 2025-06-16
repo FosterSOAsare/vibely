@@ -39,6 +39,6 @@ public class UserService {
     }
 
     public User editProfilePicture(EditProfilePictureRequest request , Integer user_id) {
-        return editProfile(user_id, request, (user, req) -> user.setBio(req.getProfilePicture()));
+        return editProfile(user_id, request, (user, req) -> user.setProfilePicture(req.getProfilePicture()));
     }
 }
