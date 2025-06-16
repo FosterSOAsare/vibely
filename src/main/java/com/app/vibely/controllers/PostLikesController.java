@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 public class PostLikesController {
 
     private final PostLikesService postLikesService;
-    private final PostLikesMapper likeMapper; // You’ll need to implement this mapper.
+    private final PostLikesMapper likeMapper;
 
     // ✅ Toggle like (like or unlike a post)
     @PostMapping
     public ResponseEntity<?> toggleLike(@PathVariable Integer postId, Principal principal) {
-        Integer userId = Integer.parseInt(principal.getName()); // Assumes Principal name is user ID
+        Integer userId = Integer.parseInt(principal.getName());
         postLikesService.toggleLike(postId, userId);
         return ResponseEntity.ok(Map.of("message", "Like toggled successfully"));
     }
