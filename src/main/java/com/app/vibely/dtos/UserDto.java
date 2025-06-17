@@ -27,5 +27,5 @@ public class UserDto {
     private Boolean isFollowing;
 
 //    Add other fields here
-    // isFollowed ,  notifications
+//    notifications
 }

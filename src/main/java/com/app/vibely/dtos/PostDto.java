@@ -13,7 +13,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostDto {
-    private String id;
+    private Integer id;
 
     @JsonProperty("owner_email")
     private String ownerEmail;

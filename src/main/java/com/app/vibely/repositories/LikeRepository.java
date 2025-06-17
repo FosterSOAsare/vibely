@@ -9,4 +9,5 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
     Like findByPostIdAndUserId(Integer postId, Integer userId);
     Page<Like> findByPostId(Integer postId, Pageable pageable);
     Integer countByPostId(Integer postId);
+    Page<Like> findByUserId(Integer userId , Pageable pageable);
 }
