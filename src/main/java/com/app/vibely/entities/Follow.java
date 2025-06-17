@@ -33,4 +33,9 @@ public class Follow {
     @Column(name = "created_at")
     private Instant createdAt;
 
+
+    public Integer getFollowersCount() {
+        return this.getFollower().getFollowers().size();
+    }
+
 }
