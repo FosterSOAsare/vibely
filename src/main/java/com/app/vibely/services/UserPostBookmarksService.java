@@ -35,10 +35,10 @@ public class UserPostBookmarksService {
             PostDto postDto =  userPostBookmarksMapper.toDto(bookmark);
 
 //          set isLiked, isSaved , isFollowing, comments , likes
-            postDto.setIsLiked(likesService.isPostLiked(bookmark.getPost().getId(), currentUserId));
+            postDto.setIsLiked(likesService.isPostLiked(postDto.getId(), currentUserId));
             postDto.setIsSaved(true);
-            postDto.setLikes(likesService.calculatePostLikes(bookmark.getPost().getId()));
-            postDto.setComments(commentsService.calculatePostComments(bookmark.getPost().getId()));
+            postDto.setLikes(likesService.calculatePostLikes(postDto.getId()));
+            postDto.setComments(commentsService.calculatePostComments(postDto.getId()));
             postDto.setIsFollowing(followRepository.checkIfUserIsFollowed(bookmark.getPost().getUser().getId() , currentUserId));
             return postDto;
         }).toList();
