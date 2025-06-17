@@ -92,7 +92,6 @@ public class PostService {
         post.setUser(user);
         post.setCaption(request.getCaption());
         post.setCreatedAt(Instant.now());
-        postRepository.save(post);
         
         Post savedPost = postRepository.save(post);
         return postMapper.toDto(savedPost);

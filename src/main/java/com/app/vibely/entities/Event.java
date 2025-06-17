@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -45,16 +46,42 @@ public class Event {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event" , cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<EventComment> eventComments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event" ,  cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EventImage> eventImages = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event" ,  cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<EventLike> eventLikes = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event" ,  cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<EventSave> eventSaves = new LinkedHashSet<>();
+
+    public List<Double> createCoordinates (){
+        return List.of(this.coordinatesLat, this.coordinatesLng);
+    }
+
+    public Integer calculateComments() {
+        return  eventComments.size();
+    }
+
+    public Integer calculateLikes() {
+        return eventLikes.size();
+    }
+
+    public boolean isLiked(Integer userId) {
+        return this.eventLikes.stream().anyMatch(like -> like.getUser().getId().equals(userId));
+    }
+
+    public boolean isSaved(Integer userId) {
+        return this.eventSaves.stream().anyMatch(bookmark -> bookmark.getUser().getId().equals(userId));
+    }
+
+    public List<String> createEventImages(){
+
+        System.out.println(eventImages);
+        return this.eventImages.stream().map(EventImage::getImageUrl).toList();
+    }
 
 }
