@@ -23,6 +23,7 @@ public class JwtService {
         return generateToken(user, jwtConfig.getRefreshTokenExpiration());
     }
 
+    //    The subject is the 'id' hence all principal.getName() will return the ID
     private Jwt generateToken(User user, long tokenExpiration) {
         var claims = Jwts.claims()
                 .subject(user.getId().toString())
