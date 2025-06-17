@@ -1,7 +1,7 @@
 package com.app.vibely.controllers;
 
 import com.app.vibely.common.PagedResponse;
-import com.app.vibely.dtos.CreatePostCommentRequest;
+import com.app.vibely.dtos.CreateCommentRequest;
 import com.app.vibely.dtos.PostCommentsDto;
 import com.app.vibely.entities.Comment;
 import com.app.vibely.entities.User;
@@ -27,7 +27,7 @@ public class PostCommentsController {
 
     // ✅ Create a comment
     @PostMapping("")
-    public ResponseEntity<PostCommentsDto> createComment(@Valid @RequestBody CreatePostCommentRequest request , @PathVariable Integer postId) {
+    public ResponseEntity<PostCommentsDto> createComment(@Valid @RequestBody CreateCommentRequest request , @PathVariable Integer postId) {
 
        User user = authService.getCurrentUser();
        Comment comment = postCommentsService.createComment(postId, user.getId(), request.getText());
@@ -46,7 +46,7 @@ public class PostCommentsController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Integer postId, @PathVariable Integer commentId) {
         User user = authService.getCurrentUser();
-        postCommentsService.deleteComment(commentId, user.getId());
+        postCommentsService.deleteComment(postId , commentId, user.getId());
         return ResponseEntity.noContent().build();
     }
 }
