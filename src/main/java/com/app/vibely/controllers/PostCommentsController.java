@@ -1,12 +1,14 @@
 package com.app.vibely.controllers;
 
 import com.app.vibely.common.PagedResponse;
+import com.app.vibely.dtos.CreatePostCommentRequest;
 import com.app.vibely.dtos.PostCommentsDto;
 import com.app.vibely.entities.Comment;
 import com.app.vibely.entities.User;
 import com.app.vibely.services.AuthService;
 import com.app.vibely.services.PostCommentsService;
 import com.app.vibely.mappers.PostCommentsMapper;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +27,11 @@ public class PostCommentsController {
 
     // ✅ Create a comment
     @PostMapping("")
-    public ResponseEntity<PostCommentsDto> createComment(@PathVariable Integer postId, @RequestBody PostCommentsDto commentDto) {
+    public ResponseEntity<PostCommentsDto> createComment(@Valid @RequestBody CreatePostCommentRequest request , @PathVariable Integer postId) {
 
        User user = authService.getCurrentUser();
-        Comment comment = postCommentsService.createComment(postId, user.getId(), commentDto.getText());
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentMapper.toDto(comment));
+       Comment comment = postCommentsService.createComment(postId, user.getId(), request.getText());
+       return ResponseEntity.status(HttpStatus.CREATED).body(commentMapper.toDto(comment));
     }
 
     // 📥 Get comments by post ID
