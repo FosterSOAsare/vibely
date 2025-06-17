@@ -14,5 +14,9 @@ public interface EventsMapper {
     @Mapping(target = "ownerEmail", source = "user.email")
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "images", expression = "java(event.createEventImages())")
+
+    @Mapping(target = "isLiked", ignore = true)
+    @Mapping(target = "isSaved", ignore = true)
+    @Mapping(target = "isFollowing", ignore = true)
     EventsDto toDto(Event event);
 }

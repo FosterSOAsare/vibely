@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
     @Mapping(target = "followings" , expression = "java(user.calculateFollowings())")
     @Mapping(target = "followers" , expression = "java(user.calculateFollowers())")
-
+    @Mapping(target = "isFollowing", ignore = true)
     UserDto toDto(User user);
 
     User toEntity(RegisterUserRequest request);

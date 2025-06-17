@@ -14,5 +14,11 @@ public interface UserPostBookmarksMapper {
     @Mapping(target = "imageUrl", source = "post.imageUrl")
     @Mapping(target = "caption", source = "post.caption")
     @Mapping(target = "createdAt", source = "post.createdAt")
+
+    @Mapping(target = "isLiked", ignore = true)
+    @Mapping(target = "isSaved", ignore = true)
+    @Mapping(target = "comments", ignore = true)
+    @Mapping(target = "likes", ignore = true)
+    @Mapping(target = "isFollowing", ignore = true)
     PostDto toDto(Bookmark bookmark);
 }
