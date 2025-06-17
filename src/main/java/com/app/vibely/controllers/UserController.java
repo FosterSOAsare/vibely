@@ -2,7 +2,6 @@ package com.app.vibely.controllers;
 
 import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.*;
-import com.app.vibely.entities.Comment;
 import com.app.vibely.entities.User;
 import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.repositories.UserRepository;
@@ -16,14 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
 @Tag(name = "Users")
+@SuppressWarnings("unused")
 public class UserController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -86,11 +84,11 @@ public class UserController {
     @GetMapping("/{user_id}")
     @Operation(summary = "Get a user with their id")
     public ResponseEntity<UserDto> getAUser(@PathVariable Integer user_id){
-        User user=  userRepository.findById(user_id).orElse(null);
-        if(user == null){
+        UserDto userDto = userService.getUser(user_id);
+        if(userDto == null){
             return ResponseEntity.notFound().build();
         }else{
-            return ResponseEntity.ok(userMapper.toDto(user));
+            return ResponseEntity.ok(userDto);
         }
     }
 }

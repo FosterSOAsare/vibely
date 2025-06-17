@@ -2,7 +2,6 @@ package com.app.vibely.services;
 
 import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.*;
-import com.app.vibely.entities.Comment;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.mappers.UserMapper;
@@ -59,6 +58,12 @@ public class UserService {
                 .map(userMapper::toDto)
                 .toList();
 
-        return new PagedResponse<UserDto>(dtos, page, size, usersPage.getTotalElements(), usersPage.getTotalPages(), usersPage.hasNext(), usersPage.hasPrevious());
+        return new PagedResponse<>(dtos, page, size, usersPage.getTotalElements(), usersPage.getTotalPages(), usersPage.hasNext(), usersPage.hasPrevious());
+    }
+
+    public UserDto getUser(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("The provided user id doesn't exist."));
+        // Convert user to userDto
+        return userMapper.toDto(user);
     }
 }
