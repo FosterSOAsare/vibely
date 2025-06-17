@@ -55,7 +55,6 @@ public class AuthService {
 
         // If authentication succeeds, fetch the user and generate tokens
         User user = userRepository.findByUsernameOrEmail(request.getIdentifier()).orElseThrow(() -> new RuntimeException("User not found after authentication"));
-        System.out.println("user" + user);
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 

@@ -32,14 +32,13 @@ public class UserPostBookmarksService {
         Page<Bookmark> bookmarkPage = bookmarkRepository.findByUserId(currentUserId, pageable);
 
         List<PostDto> bookmarksDto = bookmarkPage.stream().map((bookmark) -> {
-            System.out.println(bookmark.getUser().getId() + " " + currentUserId);
             PostDto postDto =  userPostBookmarksMapper.toDto(bookmark);
 
 //          set isLiked, isSaved , isFollowing, comments , likes
-            postDto.setIsLiked(likesService.isPostLiked(bookmark.getId() , currentUserId));
+            postDto.setIsLiked(likesService.isPostLiked(bookmark.getPost().getId(), currentUserId));
             postDto.setIsSaved(true);
-            postDto.setLikes(likesService.calculatePostLikes(bookmark.getId()));
-            postDto.setComments(commentsService.calculatePostComments(bookmark.getId()));
+            postDto.setLikes(likesService.calculatePostLikes(bookmark.getPost().getId()));
+            postDto.setComments(commentsService.calculatePostComments(bookmark.getPost().getId()));
             postDto.setIsFollowing(followRepository.checkIfUserIsFollowed(bookmark.getPost().getUser().getId() , currentUserId));
             return postDto;
         }).toList();
