@@ -59,4 +59,15 @@ public class PostLikesService {
 
         return new PagedResponse<>(likesDto, page, size, likesPage.getTotalElements(), likesPage.getTotalPages(), likesPage.hasNext(), likesPage.hasPrevious());
     }
+
+    public boolean isPostLiked(Integer postId , Integer userId) {
+        Like isLiked = likeRepository.findByPostIdAndUserId(postId , userId);
+        return isLiked != null;
+    }
+
+    public Integer calculatePostLikes(Integer postId) {
+        return likeRepository.countByPostId(postId);
+    }
+
+
 }

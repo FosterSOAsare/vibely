@@ -2,7 +2,6 @@ package com.app.vibely.services;
 
 import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.PostCommentsDto;
-import com.app.vibely.dtos.PostDto;
 import com.app.vibely.entities.Comment;
 import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.Instant;
 import java.util.List;
@@ -69,7 +67,13 @@ public class PostCommentsService {
         Pageable pageable = PageRequest.of(page, size , Sort.by("id").descending());
         Page<Comment> commentPage = commentRepository.findByPostId(postId, pageable);
         List<PostCommentsDto> commentsDto = commentPage.stream().map(postCommentsMapper::toDto).toList();
-        return new PagedResponse<PostCommentsDto>(commentsDto, page, size, commentPage.getTotalElements(), commentPage.getTotalPages(), commentPage.hasNext(), commentPage.hasPrevious());
+        return new PagedResponse<>(commentsDto, page, size, commentPage.getTotalElements(), commentPage.getTotalPages(), commentPage.hasNext(), commentPage.hasPrevious());
 
     }
+
+    public Integer calculatePostComments(Integer postId) {
+        return commentRepository.countByPostId(postId);
+    }
+
+
 }

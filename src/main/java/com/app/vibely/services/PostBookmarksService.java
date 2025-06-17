@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
+
 import java.time.Instant;
 import java.util.List;
 
@@ -57,5 +58,10 @@ public class PostBookmarksService {
         List<PostBookmarksDto> bookmarksDto = bookmarkPage.stream().map(postBookmarksMapper::toDto).toList();
         return new PagedResponse<>(bookmarksDto, page, size, bookmarkPage.getTotalElements(), bookmarkPage.getTotalPages(), bookmarkPage.hasNext(), bookmarkPage.hasPrevious());
 
+    }
+
+    public boolean isPostSaved(Integer postId , Integer userId) {
+        Bookmark isSaved = bookmarkRepository.findByPostIdAndUserId(postId , userId);
+        return isSaved != null;
     }
 }
