@@ -3,7 +3,6 @@ package com.app.vibely.services;
 import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.CreatePostRequest;
 import com.app.vibely.dtos.PostDto;
-import com.app.vibely.dtos.UserDto;
 import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
@@ -20,8 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -44,21 +41,30 @@ public class PostService {
             return dto;
         }).toList();
 
-        return new PagedResponse<PostDto>(postDtos, page, size, postsPage.getTotalElements(), postsPage.getTotalPages(), postsPage.hasNext(), postsPage.hasPrevious());
+        return new PagedResponse<>(postDtos, page, size, postsPage.getTotalElements(), postsPage.getTotalPages(), postsPage.hasNext(), postsPage.hasPrevious());
     }
 
     // Get posts by userId with optional startId (load more pattern)
-    public List<PostDto> getPostsByUser(Integer userId, Optional<Integer> startId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<Post> posts;
+    public PagedResponse<PostDto> getPostsByUser(Integer userId, Integer startId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size , Sort.by("id").descending());
+        Page<Post> postsPage;
 
-        if (startId.isPresent()) {
-            posts = postRepository.findByUserIdAndIdLessThanOrderByCreatedAtDesc(userId, startId.get(), pageable);
+        if (startId != null) {
+            postsPage = postRepository.findByUserIdAndIdLessThanEqualOrderByCreatedAtDesc(userId, startId, pageable);
         } else {
-            posts = postRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
+            postsPage = postRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
         }
 
-        return posts.stream().map(postMapper::toDto).collect(Collectors.toList());
+        //  Map through here and check isLiked or isSaved
+        List<PostDto> postDtos = postsPage.stream().map(post -> {
+            PostDto dto = postMapper.toDto(post);
+            // Check if user liked or saved this post
+            dto.setIsLiked(post.isLiked(userId));
+            dto.setIsSaved(post.isSaved(userId));
+            return dto;
+        }).toList();
+
+        return new PagedResponse<>(postDtos, page, size, postsPage.getTotalElements(), postsPage.getTotalPages(), postsPage.hasNext(), postsPage.hasPrevious());
     }
 
     // Delete a post and its likes, comments, bookmarks via cascade
