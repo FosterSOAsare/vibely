@@ -3,7 +3,6 @@ package com.app.vibely.controllers;
 import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.CreateEventRequest;
 import com.app.vibely.dtos.EventsDto;
-import com.app.vibely.entities.User;
 import com.app.vibely.services.EventsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

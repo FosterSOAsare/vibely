@@ -6,7 +6,6 @@ import com.app.vibely.dtos.CreateEventRequest;
 import com.app.vibely.dtos.EventsDto;
 import com.app.vibely.entities.Event;
 import com.app.vibely.entities.EventImage;
-import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.mappers.EventsMapper;
