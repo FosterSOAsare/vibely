@@ -22,6 +22,7 @@ import java.util.Map;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
+@SuppressWarnings("unused")
 public class AuthController {
     private final JwtConfig jwtConfig;
     private final UserMapper userMapper;

@@ -3,7 +3,6 @@ package com.app.vibely.controllers;
 import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.PostCommentsDto;
 import com.app.vibely.entities.Comment;
-import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
 import com.app.vibely.services.AuthService;
 import com.app.vibely.services.PostCommentsService;
@@ -11,15 +10,13 @@ import com.app.vibely.mappers.PostCommentsMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/posts/{postId}/comments")
+@SuppressWarnings("unused")
 public class PostCommentsController {
 
     private final PostCommentsService postCommentsService;
