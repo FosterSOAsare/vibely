@@ -6,6 +6,7 @@ import com.app.vibely.dtos.CreateEventRequest;
 import com.app.vibely.dtos.EventsDto;
 import com.app.vibely.entities.Event;
 import com.app.vibely.entities.EventImage;
+import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.mappers.EventsMapper;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -84,4 +86,21 @@ public class EventsService {
         // Return DTO
         return eventsMapper.toDto(savedEvent);
     }
+
+    public void deleteEventById(Integer postId , Integer userId) {
+
+        // Check if event exists
+        Event event =  eventRepository.findById(postId).orElse(null);
+        if(event == null){
+            throw new ResourceNotFoundException("Event not found with ID: " + postId);
+        }
+
+        //  Check if user is the owner of the event
+        if(!event.getUser().getId().equals(userId)){
+            throw new BadCredentialsException("User not allowed to perform this action");
+        }
+        eventRepository.deleteById(postId);
+
+    }
+
 }

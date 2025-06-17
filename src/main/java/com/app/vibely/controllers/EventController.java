@@ -3,6 +3,7 @@ package com.app.vibely.controllers;
 import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.CreateEventRequest;
 import com.app.vibely.dtos.EventsDto;
+import com.app.vibely.entities.User;
 import com.app.vibely.services.EventsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,5 +34,14 @@ public class EventController {
         eventDto.setIsLiked(false);
         eventDto.setIsSaved(false);
         return ResponseEntity.ok(eventDto);
+    }
+
+    // Delete event by ID
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Integer postId , Principal principal) {
+        Integer userId  = Integer.parseInt(principal.getName());
+
+        eventsService.deleteEventById(postId , userId) ;
+        return ResponseEntity.noContent().build();
     }
 }
