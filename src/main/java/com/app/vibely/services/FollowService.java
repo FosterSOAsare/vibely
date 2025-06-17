@@ -34,7 +34,7 @@ public class FollowService {
         User user = userRepository.findById(userId).orElseThrow(() -> new BadCredentialsException( "User not authorized to perform this action"));
 
 
-        Optional<Follow> existingFollow = followRepository.existsByFollowerAndFollowing(following.getId() , user.getId());
+        Optional<Follow> existingFollow = followRepository.existsByFollowerAndFollowing(user.getId() , following.getId());
         if (existingFollow.isPresent()) {
             followRepository.delete(existingFollow.get()); // Remove follow
         } else {

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.security.Principal;
 
 
 @RestController
@@ -29,8 +30,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<PagedResponse<UserDto>> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
-        PagedResponse<UserDto> userDtos = userService.getUsers(page, size);
+    public ResponseEntity<PagedResponse<UserDto>> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
+        Integer currentUserId = Integer.parseInt(principal.getName());
+        PagedResponse<UserDto> userDtos = userService.getUsers(page, size , currentUserId );
         return ResponseEntity.ok(userDtos);
     }
 
@@ -83,8 +85,9 @@ public class UserController {
 
     @GetMapping("/{user_id}")
     @Operation(summary = "Get a user with their id")
-    public ResponseEntity<UserDto> getAUser(@PathVariable Integer user_id){
-        UserDto userDto = userService.getUser(user_id);
+    public ResponseEntity<UserDto> getAUser(@PathVariable Integer user_id , Principal principal){
+        Integer currentUserId = Integer.parseInt(principal.getName());
+        UserDto userDto = userService.getUser(user_id , currentUserId);
         if(userDto == null){
             return ResponseEntity.notFound().build();
         }else{
