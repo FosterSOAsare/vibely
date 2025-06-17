@@ -159,5 +159,36 @@ public class AuthService {
     }
 
 
+    @Transactional
+    public UserDto requestResetPassword(String identifier){
+        //  Get user
+        User user = userRepository.findByUsernameOrEmail(identifier).orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
+        //  Create code and send email
+        String code = String.valueOf(generateCode());
+
+        //  Set password , isVerified , encoded verification_code
+        user.setVerificationCode(passwordEncoder.encode(code));
+
+        userRepository.save(user);
+        return userMapper.toDto(user);
+    }
+
+    @Transactional
+    public UserDto setNewPassword(SetNewPasswordRequest request){
+        //  Get user
+        User user = userRepository.findByUsernameOrEmail(request.getIdentifier()).orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
+
+        //  Compare user verification code
+        if (!passwordEncoder.matches(request.getCode(), user.getVerificationCode())) {
+            throw new RuntimeException("Provided code is incorrect");
+        }
+
+        //  Update user password
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setVerificationCode("");
+
+        userRepository.save(user);
+        return userMapper.toDto(user);
+    }
 
 }

@@ -81,6 +81,20 @@ public class AuthController {
         return ResponseEntity.ok(userDto);
     }
 
+    @PostMapping("request-password-reset")
+    public ResponseEntity<?> passwordResetRequest(@Valid @RequestBody PasswordResetRequest request, UriComponentsBuilder uriBuilder) {
+        UserDto userDto = authService.requestResetPassword(request.getIdentifier());
+        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+        return ResponseEntity.ok(userDto);
+    }
+
+    @PostMapping("set-password")
+    public ResponseEntity<?>setNewPassword(@Valid @RequestBody SetNewPasswordRequest request, UriComponentsBuilder uriBuilder) {
+        UserDto userDto = authService.setNewPassword(request);
+        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+        return ResponseEntity.ok(userDto);
+    }
+
 
 
 }

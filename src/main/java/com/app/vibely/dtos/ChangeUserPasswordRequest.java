@@ -8,11 +8,11 @@ import lombok.Data;
 @Data
 public class ChangeUserPasswordRequest {
     @NotBlank(message = "Current password is required")
-    @Size(min = 6, max = 25, message = "Current password must be between 6 to 25 characters long.")
+    @Size(min = 8, max = 25, message = "Current password must be between 8 to 25 characters long.")
     private String currentPassword;
 
     @NotBlank(message = "New password is required")
-    @Size(min = 6, max = 25, message = "New password must be between 6 to 25 characters long.")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{6,25}$", message = "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.")
+    @Size(min = 8, max = 25, message = "New password must be between 8 to 25 characters long.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{8,25}$", message = "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character.")
     private String newPassword;
 }
