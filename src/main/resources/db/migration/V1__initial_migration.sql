@@ -164,3 +164,4 @@ CREATE TABLE event_comments (
                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+
