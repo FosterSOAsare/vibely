@@ -1,7 +1,9 @@
 package com.app.vibely.common;
 
 import com.app.vibely.dtos.ErrorDto;
+import com.app.vibely.exceptions.DuplicateUserException;
 import com.app.vibely.exceptions.ResourceNotFoundException;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
+@SuppressWarnings("unused")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -34,12 +37,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ErrorDto> handleNotFound(NoHandlerFoundException ex) {
+    public ResponseEntity<ErrorDto> handleNotFound() {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorDto("Endpoint not found"));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorDto> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex) {
+    public ResponseEntity<ErrorDto> handleMethodNotAllowed() {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new ErrorDto("HTTP method not supported for this endpoint"));
     }
 
@@ -61,6 +64,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleResponseStatusException(Exception e) {
         Map<String, String> error = new HashMap<>();
         error.put("error", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicateUserException(Exception e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Map<String, String>> handleRuntimeException(Exception e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(BeanCreationException.class)
+    public ResponseEntity<Map<String, String>> handleBeanCreationException(Exception e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }

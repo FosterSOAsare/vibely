@@ -3,7 +3,7 @@ package com.app.vibely.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -12,8 +12,8 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "event_saves")
-public class EventSave {
+@Table(name = "event_comment_likes")
+public class EventCommentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -21,16 +21,16 @@ public class EventSave {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "event_id", nullable = false)
-    private Event event;
+    @JoinColumn(name = "event_comment_id", nullable = false)
+    private EventComment comment;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "saved_at")
-    private Instant savedAt;
+    @CreationTimestamp
+    @Column(name = "created_at" ,  updatable = false)
+    private Instant createdAt;
 
 }

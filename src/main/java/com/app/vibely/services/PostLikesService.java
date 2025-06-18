@@ -1,9 +1,12 @@
 package com.app.vibely.services;
 
+import com.app.vibely.common.PagedResponse;
+import com.app.vibely.dtos.PostLikesDto;
 import com.app.vibely.entities.Like;
 import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
+import com.app.vibely.mappers.PostLikesMapper;
 import com.app.vibely.repositories.LikeRepository;
 import com.app.vibely.repositories.PostRepository;
 import com.app.vibely.repositories.UserRepository;
@@ -12,10 +15,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,6 +28,7 @@ public class PostLikesService {
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostLikesMapper postLikesMapper;
 
     // ✅ Add or remove like (toggle)
     @Transactional
@@ -46,11 +48,26 @@ public class PostLikesService {
         }
     }
 
-    public List<Like> getLikesByPostId(Integer postId, int page, int size) {
+    public PagedResponse<PostLikesDto> getLikesByPostId(Integer postId, int page, int size) {
         if (!postRepository.existsById(postId)) throw new ResourceNotFoundException( "Post not found");
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Like> likePage = likeRepository.findByPostId(postId, pageable);
-        return likePage.getContent();
+        Page<Like> likesPage = likeRepository.findByPostId(postId, pageable);
+
+//        Map and return a pagedResponse
+        List<PostLikesDto> likesDto = likesPage.stream().map(postLikesMapper::toDto).toList();
+
+        return new PagedResponse<>(likesDto, page, size, likesPage.getTotalElements(), likesPage.getTotalPages(), likesPage.hasNext(), likesPage.hasPrevious());
     }
+
+    public boolean isPostLiked(Integer postId , Integer userId) {
+        Like isLiked = likeRepository.findByPostIdAndUserId(postId , userId);
+        return isLiked != null;
+    }
+
+    public Integer calculatePostLikes(Integer postId) {
+        return likeRepository.countByPostId(postId);
+    }
+
+
 }

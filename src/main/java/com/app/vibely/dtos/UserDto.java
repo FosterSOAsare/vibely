@@ -1,6 +1,5 @@
 package com.app.vibely.dtos;
 
-import com.app.vibely.entities.Follow;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,10 +22,10 @@ public class UserDto {
     private String name;
     private String email;
     private String gender;
-    private int followings;
-    private int followers;
-    private boolean isFollowing;
+    private Integer followings;
+    private Integer followers;
+    private Boolean isFollowing;
 
 //    Add other fields here
-    // isFollowed ,  notifications
+//    notifications
 }

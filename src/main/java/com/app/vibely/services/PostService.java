@@ -1,5 +1,6 @@
 package com.app.vibely.services;
 
+import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.CreatePostRequest;
 import com.app.vibely.dtos.PostDto;
 import com.app.vibely.entities.Post;
@@ -9,15 +10,15 @@ import com.app.vibely.mappers.PostMapper;
 import com.app.vibely.repositories.PostRepository;
 import com.app.vibely.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,32 +29,42 @@ public class PostService {
     private final UserRepository userRepository;
 
     // Get all posts with pagination, newest first
-    public List<PostDto> getAllPosts(int page, int size , Integer userId ) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc(pageable);
+    public PagedResponse<PostDto> getAllPosts(int page, int size , Integer userId ) {
+        Pageable pageable = PageRequest.of(page, size , Sort.by("id").descending());
+        Page<Post> postsPage = postRepository.findAllByOrderByCreatedAtDesc(pageable);
 
-        return posts.stream().map(post -> {
+        List<PostDto> postDtos = postsPage.stream().map(post -> {
             PostDto dto = postMapper.toDto(post);
-
-            // Check if user liked this post
+            // Check if user liked or saved this post
             dto.setIsLiked(post.isLiked(userId));
-
+            dto.setIsSaved(post.isSaved(userId));
             return dto;
-        }).collect(Collectors.toList());
+        }).toList();
+
+        return new PagedResponse<>(postDtos, page, size, postsPage.getTotalElements(), postsPage.getTotalPages(), postsPage.hasNext(), postsPage.hasPrevious());
     }
 
     // Get posts by userId with optional startId (load more pattern)
-    public List<PostDto> getPostsByUser(Integer userId, Optional<Integer> startId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        List<Post> posts;
+    public PagedResponse<PostDto> getPostsByUser(Integer userId, Integer startId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size , Sort.by("id").descending());
+        Page<Post> postsPage;
 
-        if (startId.isPresent()) {
-            posts = postRepository.findByUserIdAndIdLessThanOrderByCreatedAtDesc(userId, startId.get(), pageable);
+        if (startId != null) {
+            postsPage = postRepository.findByUserIdAndIdLessThanEqualOrderByCreatedAtDesc(userId, startId, pageable);
         } else {
-            posts = postRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
+            postsPage = postRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
         }
 
-        return posts.stream().map(postMapper::toDto).collect(Collectors.toList());
+        //  Map through here and check isLiked or isSaved
+        List<PostDto> postDtos = postsPage.stream().map(post -> {
+            PostDto dto = postMapper.toDto(post);
+            // Check if user liked or saved this post
+            dto.setIsLiked(post.isLiked(userId));
+            dto.setIsSaved(post.isSaved(userId));
+            return dto;
+        }).toList();
+
+        return new PagedResponse<>(postDtos, page, size, postsPage.getTotalElements(), postsPage.getTotalPages(), postsPage.hasNext(), postsPage.hasPrevious());
     }
 
     // Delete a post and its likes, comments, bookmarks via cascade
@@ -81,9 +92,11 @@ public class PostService {
         post.setUser(user);
         post.setCaption(request.getCaption());
         post.setCreatedAt(Instant.now());
-        postRepository.save(post);
         
         Post savedPost = postRepository.save(post);
         return postMapper.toDto(savedPost);
     }
+
+
+
 }

@@ -6,8 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LikeRepository extends JpaRepository<Like, Integer> {
-    void deleteAllByPostId(Integer postId);
     Like findByPostIdAndUserId(Integer postId, Integer userId);
     Page<Like> findByPostId(Integer postId, Pageable pageable);
-
+    Integer countByPostId(Integer postId);
+    Page<Like> findByUserId(Integer userId , Pageable pageable);
 }

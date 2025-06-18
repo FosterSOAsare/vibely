@@ -8,6 +8,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,8 +34,14 @@ public class EventComment {
     @Column(name = "text", nullable = false, length = Integer.MAX_VALUE)
     private String text;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EventCommentLike> likes = new LinkedHashSet<>();
+
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
+    public Integer getLikesCount(){
+        return this.likes.size();
+    }
 }

@@ -43,6 +43,12 @@ public class User {
     @Column(name = "profile_picture", length = Integer.MAX_VALUE)
     private String profilePicture;
 
+    @Column(name = "is_verified")
+    private Boolean isVerified;
+
+    @Column(name = "verification_code")
+    private String verificationCode;
+
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;

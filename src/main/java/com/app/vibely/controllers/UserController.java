@@ -1,5 +1,6 @@
 package com.app.vibely.controllers;
 
+import com.app.vibely.common.PagedResponse;
 import com.app.vibely.dtos.*;
 import com.app.vibely.entities.User;
 import com.app.vibely.mappers.UserMapper;
@@ -14,13 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-
+import java.security.Principal;
 
 
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
 @Tag(name = "Users")
+@SuppressWarnings("unused")
 public class UserController {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -28,10 +30,10 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public Iterable<UserDto> getAllUsers() {
-        return  userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto).toList();
+    public ResponseEntity<PagedResponse<UserDto>> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
+        Integer currentUserId = Integer.parseInt(principal.getName());
+        PagedResponse<UserDto> userDtos = userService.getUsers(page, size , currentUserId );
+        return ResponseEntity.ok(userDtos);
     }
 
     @GetMapping("/profile")
@@ -40,6 +42,7 @@ public class UserController {
 
         var userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
+
     }
 
     @PutMapping("/profile/name")
@@ -82,17 +85,13 @@ public class UserController {
 
     @GetMapping("/{user_id}")
     @Operation(summary = "Get a user with their id")
-    public ResponseEntity<UserDto> getAUser(@PathVariable Integer user_id){
-        User user=  userRepository.findById(user_id).orElse(null);
-        if(user == null){
+    public ResponseEntity<UserDto> getAUser(@PathVariable Integer user_id , Principal principal){
+        Integer currentUserId = Integer.parseInt(principal.getName());
+        UserDto userDto = userService.getUser(user_id , currentUserId);
+        if(userDto == null){
             return ResponseEntity.notFound().build();
         }else{
-            return ResponseEntity.ok(userMapper.toDto(user));
+            return ResponseEntity.ok(userDto);
         }
     }
-
-
-
-//    Next steps: edit bio , username , name , gender , profile picture
-//
 }
