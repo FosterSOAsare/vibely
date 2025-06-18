@@ -56,7 +56,7 @@ public class Event {
     private Set<EventLike> eventLikes = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "event" ,  cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private Set<EventSave> eventSaves = new LinkedHashSet<>();
+    private Set<EventBookmarks> bookmarks = new LinkedHashSet<>();
 
     public List<Double> createCoordinates (){
         return List.of(this.coordinatesLat, this.coordinatesLng);
@@ -75,7 +75,7 @@ public class Event {
     }
 
     public boolean isSaved(Integer userId) {
-        return this.eventSaves.stream().anyMatch(bookmark -> bookmark.getUser().getId().equals(userId));
+        return this.bookmarks.stream().anyMatch(bookmark -> bookmark.getUser().getId().equals(userId));
     }
 
     public List<String> createEventImages(){

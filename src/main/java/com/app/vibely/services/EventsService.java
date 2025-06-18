@@ -102,4 +102,35 @@ public class EventsService {
 
     }
 
+    // Get posts by userId with optional startId (load more pattern)
+    public PagedResponse<EventsDto> getPostsByUser(Integer userId, Integer startId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size , Sort.by("id").descending());
+        Page<Event> eventsPage;
+
+        if (startId != null) {
+            eventsPage = eventRepository.findByUserIdAndIdLessThanEqualOrderByCreatedAtDesc(userId, startId, pageable);
+        } else {
+            eventsPage = eventRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
+        }
+
+        //  Map through here and check isLiked or isSaved
+        List<EventsDto> eventsDtos = eventsPage.stream().map(post -> {
+            EventsDto dto = eventsMapper.toDto(post);
+            // Check if user liked or saved this post
+            dto.setIsLiked(post.isLiked(userId));
+            dto.setIsSaved(post.isSaved(userId));
+            return dto;
+        }).toList();
+
+        return new PagedResponse<>(eventsDtos, page, size, eventsPage.getTotalElements(), eventsPage.getTotalPages(), eventsPage.hasNext(), eventsPage.hasPrevious());
+    }
+
+    public List<String> createEventImages(Set<EventImage> eventImages){
+        return eventImages.stream().map(EventImage::getImageUrl).toList();
+    }
+
+    public List<Double> createCoordinates (Double coordinatesLat , Double coordinatesLng){
+        return List.of(coordinatesLat, coordinatesLng);
+    }
+
 }

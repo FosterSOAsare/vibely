@@ -26,6 +26,14 @@ public class EventController {
         return ResponseEntity.ok(posts);
     }
 
+    // Get events by user ID with optional start ID (for "load more") - Refactors waiting
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<PagedResponse<EventsDto>> getPostsByUser(@PathVariable Integer userId, @RequestParam(required = false) Integer startId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size
+    ) {
+        PagedResponse<EventsDto> posts = eventsService.getPostsByUser(userId, startId, page, size);
+        return ResponseEntity.ok(posts);
+    }
+
     @PostMapping("")
     public ResponseEntity<EventsDto> createEvent(@Valid @RequestBody CreateEventRequest request , Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
