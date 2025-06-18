@@ -2,6 +2,7 @@ package com.app.vibely.controllers;
 
 import com.app.vibely.dtos.CreateStoryDto;
 import com.app.vibely.dtos.StoriesDto;
+import com.app.vibely.dtos.UserDto;
 import com.app.vibely.entities.Story;
 import com.app.vibely.mappers.StoriesMapper;
 import com.app.vibely.services.StoriesService;
@@ -39,5 +40,12 @@ public class StoriesController {
                 .toList();
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/users-with-stories")
+    public ResponseEntity<List<UserDto>> getUsersWithStories() {
+        List<UserDto> users = storyService.getUsersWithStories();
+        return ResponseEntity.ok(users);
+    }
+
 
 }
