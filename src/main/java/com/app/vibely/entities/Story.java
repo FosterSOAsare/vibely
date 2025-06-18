@@ -27,11 +27,12 @@ public class Story {
     @Column(name = "image_url", nullable = false, length = Integer.MAX_VALUE)
     private String imageUrl;
 
+    @Column(name = "caption")
+    private String caption;
+
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @Column(name = "expires_at", nullable = false)
-    private Instant expiresAt;
 
 }
