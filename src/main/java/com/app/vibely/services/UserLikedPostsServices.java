@@ -38,6 +38,7 @@ public class UserLikedPostsServices {
             postDto.setLikes(likesService.calculatePostLikes(postDto.getId()));
             postDto.setComments(commentsService.calculatePostComments(postDto.getId()));
             postDto.setIsFollowing(followRepository.checkIfUserIsFollowed(liked.getPost().getUser().getId() , currentUserId));
+
             return postDto;
         }).toList();
         return new PagedResponse<>(likedDto, page, size, likedPage.getTotalElements(), likedPage.getTotalPages(), likedPage.hasNext(), likedPage.hasPrevious());
