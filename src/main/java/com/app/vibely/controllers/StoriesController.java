@@ -47,5 +47,9 @@ public class StoriesController {
         return ResponseEntity.ok(users);
     }
 
-
+    @DeleteMapping("/deleteStory/{id}")
+    public ResponseEntity<Void> deleteStory(@PathVariable Integer id) {
+        storyService.deleteStoryById(id);
+        return ResponseEntity.ok().build();
+    }
 }

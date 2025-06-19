@@ -48,4 +48,11 @@ public class StoriesService {
                 .map(userMapper::toDto)
                 .toList();
     }
+
+    public void deleteStoryById(Integer id) {
+        if (!storyRepository.existsById(id)) {
+            throw new EntityNotFoundException("Story with ID " + id + " not found");
+        }
+        storyRepository.deleteById(id);
+    }
 }
