@@ -6,9 +6,11 @@ import com.app.vibely.dtos.UserDto;
 import com.app.vibely.entities.Story;
 import com.app.vibely.mappers.StoriesMapper;
 import com.app.vibely.services.StoriesService;
+import com.sun.security.auth.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

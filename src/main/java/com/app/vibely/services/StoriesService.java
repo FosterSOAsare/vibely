@@ -39,7 +39,7 @@ public class StoriesService {
     }
 
     public List<Story> getStoriesByUserId(Integer userId) {
-        userRepository.findById(userId).orElseThrow(() ->  new ResourceNotFoundException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return storyRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
