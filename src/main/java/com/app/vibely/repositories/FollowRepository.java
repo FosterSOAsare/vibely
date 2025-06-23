@@ -13,6 +13,9 @@ public interface FollowRepository extends JpaRepository<Follow, Integer> {
     // Who follows a specific user (followers of X)
     Page<Follow> findAllByFollowing_Id(Integer userId, Pageable pageable);
 
+    // Who does a specific user (followings of X)
+    Page<Follow> findAllByFollower_Id(Integer userId, Pageable pageable);
+
     @Query("SELECT COUNT(f) > 0 FROM Follow f WHERE f.follower.id = :followerId AND f.following.id = :userId")
     boolean checkIfUserIsFollowed(@Param("userId") Integer userId, @Param("followerId") Integer followerId);
 

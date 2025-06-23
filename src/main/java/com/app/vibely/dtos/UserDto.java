@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 
 
 @Getter
@@ -25,6 +26,7 @@ public class UserDto {
     private Integer followings;
     private Integer followers;
     private Boolean isFollowing;
+    private Instant createdAt;
 
 //    Add other fields here
 //    notifications

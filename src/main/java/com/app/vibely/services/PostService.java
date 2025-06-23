@@ -7,6 +7,7 @@ import com.app.vibely.entities.Post;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.mappers.PostMapper;
+import com.app.vibely.repositories.FollowRepository;
 import com.app.vibely.repositories.PostRepository;
 import com.app.vibely.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
     private final UserRepository userRepository;
+    private final FollowRepository followRepository;
 
     // Get all posts with pagination, newest first
     public PagedResponse<PostDto> getAllPosts(int page, int size , Integer userId ) {
@@ -38,6 +40,7 @@ public class PostService {
             // Check if user liked or saved this post
             dto.setIsLiked(post.isLiked(userId));
             dto.setIsSaved(post.isSaved(userId));
+            dto.setIsFollowing(followRepository.checkIfUserIsFollowed(post.getUser().getId() , userId));
             return dto;
         }).toList();
 

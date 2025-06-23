@@ -13,7 +13,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/users/{followingId}/follows")
+@RequestMapping("/api/users")
 @SuppressWarnings("unused")
 public class FollowController {
     private final FollowService followService;
@@ -21,7 +21,7 @@ public class FollowController {
 
     //    Toggle following
     // ✅ Toggle like (like or unlike a post)
-    @PostMapping
+    @PostMapping("/{followingId}/follows")
     public ResponseEntity<?> toggleFollows(@PathVariable Integer followingId, Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
 
@@ -30,9 +30,16 @@ public class FollowController {
     }
 
     // ✅ Get paginated follows of a user
-    @GetMapping("")
+    @GetMapping("/{followingId}/follows")
     public ResponseEntity<PagedResponse<FollowDto>> getUserFollowers(@PathVariable Integer followingId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
         PagedResponse<FollowDto> follows = followService.getFollowersByFollowingId(followingId, page, size);
+        return ResponseEntity.ok(follows);
+    }
+
+    @GetMapping("/my-followers")
+    public ResponseEntity<PagedResponse<FollowDto>> getMyFollowers( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
+        Integer userId = Integer.parseInt(principal.getName());
+        PagedResponse<FollowDto> follows = followService.getMyFollowers(userId, page, size);
         return ResponseEntity.ok(follows);
     }
 }

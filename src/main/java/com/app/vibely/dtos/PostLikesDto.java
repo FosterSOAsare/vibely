@@ -1,5 +1,6 @@
 package com.app.vibely.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.time.Instant;
@@ -8,9 +9,10 @@ import java.time.Instant;
 public class PostLikesDto {
     private Integer id;
     private Integer postId;
+    @JsonProperty("profile_picture")
     private String profilePicture;
     private String username;
-    private String ownerEmail;
+    private String email;
     private Integer userId;
     private Instant createdAt;
 }

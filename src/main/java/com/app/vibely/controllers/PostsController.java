@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 @AllArgsConstructor
 @RestController
@@ -44,7 +46,7 @@ public class PostsController {
         User user = authService.getCurrentUser();
 
         postService.deletePostById(postId , user.getId()) ;
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Postr deleted successfully"));
     }
 
     @PostMapping("")

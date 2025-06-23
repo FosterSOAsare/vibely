@@ -63,4 +63,23 @@ public class FollowService {
 
         return new PagedResponse<>(followsDto, page, size, followsPage.getTotalElements(), followsPage.getTotalPages(), followsPage.hasNext(), followsPage.hasPrevious());
     }
+
+    public PagedResponse<FollowDto> getMyFollowers(Integer followerId, int page, int size) {
+        if (!userRepository.existsById(followerId)) throw new ResourceNotFoundException( "The user was not found");
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Follow> followsPage = followRepository.findAllByFollower_Id(followerId , pageable);
+
+//        Map and return a pagedResponse
+        List<FollowDto> followsDto = followsPage.stream().map((follow) -> {
+            FollowDto followDto = followMapper.toDto(follow);
+            followDto.setIsFollowing(true);
+            followDto.setUsername(follow.getFollowing().getUsername());
+            followDto.setId(follow.getFollowing().getId());
+            followDto.setProfilePicture(follow.getFollowing().getProfilePicture());
+            return followDto;
+        }).toList();
+
+        return new PagedResponse<>(followsDto, page, size, followsPage.getTotalElements(), followsPage.getTotalPages(), followsPage.hasNext(), followsPage.hasPrevious());
+    }
 }

@@ -30,6 +30,8 @@ public class PostDto {
 
     private Integer comments;
 
+    private Integer ownerId;
+
     private Integer likes;
 
     @JsonProperty("isLiked")

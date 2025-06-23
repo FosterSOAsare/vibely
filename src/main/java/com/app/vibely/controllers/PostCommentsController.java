@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 
 @AllArgsConstructor
 @RestController
@@ -44,9 +46,9 @@ public class PostCommentsController {
 
     // ❌ Delete a comment
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Integer postId, @PathVariable Integer commentId) {
+    public ResponseEntity<?> deleteComment(@PathVariable Integer postId, @PathVariable Integer commentId) {
         User user = authService.getCurrentUser();
         postCommentsService.deleteComment(postId , commentId, user.getId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Comment deleted successfully"));
     }
 }

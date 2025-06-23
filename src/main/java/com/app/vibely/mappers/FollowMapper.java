@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface FollowMapper {
-    @Mapping(target="user_id" , source="follower.id" )
+    @Mapping(target="id" , source="follower.id" )
     @Mapping(target="follow_id" , source="id" )
     @Mapping(target="profilePicture" , source="follower.profilePicture" )
     @Mapping(target="username" , source="follower.username")
