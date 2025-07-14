@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: vibely
+
+  jwt:
+    secret: ${JWT_SECRET}
+    accessTokenExpiration: 43200
+    refreshTokenExpiration: 604800
+
+  datasource:
+    url: ${JDBC_DATABASE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
