@@ -11,3 +11,7 @@ spring:
     url: ${JDBC_DATABASE_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      max-lifetime: 300000
+      idle-timeout: 30000
+      validation-timeout: 5000
