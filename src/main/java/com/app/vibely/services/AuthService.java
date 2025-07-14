@@ -112,6 +112,7 @@ public class AuthService {
         //  Create a verification code and send email
         String code = String.valueOf(generateCode());
 
+        System.out.println(code);
         //  Set password , isVerified , encoded verification_code
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setVerificationCode(passwordEncoder.encode(code));
