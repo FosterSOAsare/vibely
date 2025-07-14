@@ -39,7 +39,7 @@ public class StoriesService {
     }
 
     public List<Story> getStoriesByUserId(Integer userId) {
-        userRepository.findById(userId).orElseThrow(() ->  new ResourceNotFoundException("User not found"));
+        userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return storyRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
@@ -47,5 +47,12 @@ public class StoriesService {
         return storyRepository.findUsersWithStories().stream()
                 .map(userMapper::toDto)
                 .toList();
+    }
+
+    public void deleteStoryById(Integer id) {
+        if (!storyRepository.existsById(id)) {
+            throw new EntityNotFoundException("Story with ID " + id + " not found");
+        }
+        storyRepository.deleteById(id);
     }
 }
