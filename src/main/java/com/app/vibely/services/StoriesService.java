@@ -1,11 +1,10 @@
 package com.app.vibely.services;
 
 import com.app.vibely.dtos.CreateStoryDto;
-import com.app.vibely.dtos.UserDto;
+import com.app.vibely.dtos.UserWithStoryDto;
 import com.app.vibely.entities.Story;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
-import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.repositories.StoryRepository;
 import com.app.vibely.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,7 +20,6 @@ public class StoriesService {
 
     private final StoryRepository storyRepository;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     public Story createStory(CreateStoryDto dto, Integer userId) {
         // ✅ Check if the user exists before creating the story
@@ -43,9 +41,16 @@ public class StoriesService {
         return storyRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
-    public List<UserDto> getUsersWithStories() {
+    public List<UserWithStoryDto> getUsersWithStories(Integer currentUserId) {
+        User current = userRepository.findById(currentUserId).orElse(null);
+        if(current == null) throw new ResourceNotFoundException("user not found");
+
         return storyRepository.findUsersWithStories().stream()
-                .map(userMapper::toDto)
+                .map((user) -> {
+                    UserWithStoryDto storyUser = new  UserWithStoryDto(user.getUsername(), user.getId(), user.getProfilePicture(), true);
+                    storyUser.setAllViewed(user.hasViewedAllStoriesOf(current));
+                    return storyUser;
+                })
                 .toList();
     }
 

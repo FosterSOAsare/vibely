@@ -2,15 +2,13 @@ package com.app.vibely.controllers;
 
 import com.app.vibely.dtos.CreateStoryDto;
 import com.app.vibely.dtos.StoriesDto;
-import com.app.vibely.dtos.UserDto;
+import com.app.vibely.dtos.UserWithStoryDto;
 import com.app.vibely.entities.Story;
 import com.app.vibely.mappers.StoriesMapper;
 import com.app.vibely.services.StoriesService;
-import com.sun.security.auth.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -44,8 +42,9 @@ public class StoriesController {
     }
 
     @GetMapping("/users-with-stories")
-    public ResponseEntity<List<UserDto>> getUsersWithStories() {
-        List<UserDto> users = storyService.getUsersWithStories();
+    public ResponseEntity<List<UserWithStoryDto>> getUsersWithStories(Principal principal) {
+        Integer userId = Integer.parseInt(principal.getName());
+        List<UserWithStoryDto> users = storyService.getUsersWithStories(userId);
         return ResponseEntity.ok(users);
     }
 
