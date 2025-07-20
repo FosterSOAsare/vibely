@@ -1,5 +1,6 @@
 package com.app.vibely.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class EventCommentsDto {
     private Integer eventId;
     private Integer userId;
     private String username;
+
+    @JsonProperty("profile_picture")
     private String profilePicture;
 
     private int likesCount;

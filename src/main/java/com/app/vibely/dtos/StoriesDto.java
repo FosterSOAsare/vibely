@@ -1,7 +1,7 @@
 package com.app.vibely.dtos;
 
 import lombok.Data;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;
 
 @Data
@@ -13,5 +13,6 @@ public class StoriesDto {
 
     private Integer userId;
     private String username;
+    @JsonProperty("profile_picture")
     private String profilePicture;
 }

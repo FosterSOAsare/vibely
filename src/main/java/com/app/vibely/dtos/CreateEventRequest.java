@@ -4,8 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -28,4 +31,9 @@ public class CreateEventRequest {
     @NotNull(message = "Coordinates are required")
     @Size(min = 2, max = 2, message = "Coordinates must contain exactly 2 values: latitude and longitude")
     private List<@NotNull(message = "Coordinate values cannot be null") Double> coordinates;
+
+    private Instant eventTime;
+
+    @PositiveOrZero(message = "Price must be non-negative")
+    private BigDecimal price;
 }

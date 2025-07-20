@@ -18,5 +18,7 @@ public interface EventsMapper {
     @Mapping(target = "isLiked", ignore = true)
     @Mapping(target = "isSaved", ignore = true)
     @Mapping(target = "isFollowing", ignore = true)
+    @Mapping(target = "eventTime", source = "eventTime")
+    @Mapping(target = "price", source = "price")
     EventsDto toDto(Event event);
 }

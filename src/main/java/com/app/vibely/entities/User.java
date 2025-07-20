@@ -57,9 +57,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Bookmark> bookmarks = new LinkedHashSet<>() ;
 
+//    Users this user is following (aka "followings").
     @OneToMany(mappedBy = "following")
     private Set<Follow> followers = new LinkedHashSet<>();
 
+//    Users who follow this user
     @OneToMany(mappedBy = "follower")
     private Set<Follow> followings = new LinkedHashSet<>();
 

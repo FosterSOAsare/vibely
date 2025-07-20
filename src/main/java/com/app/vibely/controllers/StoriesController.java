@@ -53,4 +53,11 @@ public class StoriesController {
         storyService.deleteStoryById(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/marked-as-viewed/{id}")
+    public ResponseEntity<Void> markStoryAsViewed(@PathVariable Integer id , Principal principal) {
+        Integer userId = Integer.parseInt(principal.getName());
+        storyService.markStoryAsViewed(id , userId );
+        return ResponseEntity.ok().build();
+    }
 }

@@ -30,16 +30,15 @@ public class FollowController {
     }
 
     // ✅ Get paginated follows of a user
-    @GetMapping("/{followingId}/follows")
-    public ResponseEntity<PagedResponse<FollowDto>> getUserFollowers(@PathVariable Integer followingId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
-        PagedResponse<FollowDto> follows = followService.getFollowersByFollowingId(followingId, page, size);
+    @GetMapping("/{userId}/followers")
+    public ResponseEntity<PagedResponse<FollowDto>> getUserFollowers(@PathVariable Integer userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
+        PagedResponse<FollowDto> follows = followService.getFollowers(userId, page, size);
         return ResponseEntity.ok(follows);
     }
 
-    @GetMapping("/my-followers")
-    public ResponseEntity<PagedResponse<FollowDto>> getMyFollowers( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
-        Integer userId = Integer.parseInt(principal.getName());
-        PagedResponse<FollowDto> follows = followService.getMyFollowers(userId, page, size);
+    @GetMapping("/{userId}/followings")
+    public ResponseEntity<PagedResponse<FollowDto>> getUserFollowings(@PathVariable Integer userId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
+        PagedResponse<FollowDto> follows = followService.getFollowings(userId, page, size);
         return ResponseEntity.ok(follows);
     }
 }

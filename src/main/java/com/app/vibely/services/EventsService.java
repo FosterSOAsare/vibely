@@ -65,6 +65,8 @@ public class EventsService {
         event.setLocation(request.getLocation());
         event.setCoordinatesLat(request.getCoordinates().get(0));
         event.setCoordinatesLng(request.getCoordinates().get(1));
+        event.setEventTime(request.getEventTime());
+        event.setPrice(request.getPrice());
         event.setCreatedAt(Instant.now());
 
         // Map image URLs to EventImage entities and attach to event
