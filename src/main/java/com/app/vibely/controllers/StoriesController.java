@@ -2,6 +2,7 @@ package com.app.vibely.controllers;
 
 import com.app.vibely.dtos.CreateStoryDto;
 import com.app.vibely.dtos.StoriesDto;
+import com.app.vibely.dtos.UserDto;
 import com.app.vibely.dtos.UserWithStoryDto;
 import com.app.vibely.entities.Story;
 import com.app.vibely.mappers.StoriesMapper;
@@ -60,4 +61,12 @@ public class StoriesController {
         storyService.markStoryAsViewed(id , userId );
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/viewers/{id}")
+    public ResponseEntity<List<UserDto>> getStoryViewers(@PathVariable Integer id) {
+        List<UserDto> users = storyService.getStoryViewers(id );
+        return ResponseEntity.ok(users);
+    }
+
+
 }

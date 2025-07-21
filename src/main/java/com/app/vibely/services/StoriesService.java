@@ -1,11 +1,13 @@
 package com.app.vibely.services;
 
 import com.app.vibely.dtos.CreateStoryDto;
+import com.app.vibely.dtos.UserDto;
 import com.app.vibely.dtos.UserWithStoryDto;
 import com.app.vibely.entities.Story;
 import com.app.vibely.entities.StoryView;
 import com.app.vibely.entities.User;
 import com.app.vibely.exceptions.ResourceNotFoundException;
+import com.app.vibely.mappers.UserMapper;
 import com.app.vibely.repositories.StoryRepository;
 import com.app.vibely.repositories.StoryViewRepository;
 import com.app.vibely.repositories.UserRepository;
@@ -23,6 +25,7 @@ public class StoriesService {
     private final StoryRepository storyRepository;
     private final UserRepository userRepository;
     private final StoryViewRepository storyViewRepository;
+    private final UserMapper userMapper;
 
     public Story createStory(CreateStoryDto dto, Integer userId) {
         // ✅ Check if the user exists before creating the story
@@ -81,6 +84,15 @@ public class StoriesService {
         storyView.setViewedAt(Instant.now());
 
         storyViewRepository.save(storyView);
+    }
+
+    public List<UserDto> getStoryViewers(Integer storyId) {
+
+        Story story = storyRepository.findById(storyId).orElseThrow(() -> new EntityNotFoundException("Story with ID " + storyId + " not found"));
+
+        return storyViewRepository.findViewersByStory(story).stream()
+                .map(userMapper::toDto)
+                .toList();
     }
 
 }
