@@ -6,22 +6,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
-public class EventCommentsDto {
-    private Integer id;
-    private String text;
-    private Instant createdAt;
-
-    private Integer eventId;
-    private Integer userId;
+public class UserWithStoryDto {
     private String username;
-
+    private Integer id;
     @JsonProperty("profile_picture")
     private String profilePicture;
-
-    private int likesCount;
+    private boolean allViewed;
 }

@@ -44,11 +44,11 @@ public class EventController {
     }
 
     // Delete event by ID
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Integer postId , Principal principal) {
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<?> deletePost(@PathVariable Integer eventId , Principal principal) {
         Integer userId  = Integer.parseInt(principal.getName());
 
-        eventsService.deleteEventById(postId , userId) ;
+        eventsService.deleteEventById(eventId , userId) ;
         return ResponseEntity.noContent().build();
     }
 }

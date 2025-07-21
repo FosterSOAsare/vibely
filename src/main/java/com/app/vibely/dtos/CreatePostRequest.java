@@ -7,8 +7,6 @@ import lombok.Data;
 
 @Data
 public class CreatePostRequest {
-
-    @NotBlank(message = "Caption is required")
     @Size(max = 255, message = "Caption must not exceed 255 characters")
     private String caption;
 

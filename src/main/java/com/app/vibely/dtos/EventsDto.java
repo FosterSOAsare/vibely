@@ -47,4 +47,9 @@ public class EventsDto {
 
     @JsonProperty("isSaved")
     private Boolean isSaved;
+
+    @JsonProperty("eventTime")
+    private Instant eventTime;
+
+    private java.math.BigDecimal price;
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -56,11 +57,19 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Bookmark> bookmarks = new LinkedHashSet<>() ;
 
+//    Users this user is following (aka "followings").
     @OneToMany(mappedBy = "following")
     private Set<Follow> followers = new LinkedHashSet<>();
 
+//    Users who follow this user
     @OneToMany(mappedBy = "follower")
     private Set<Follow> followings = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Story> stories = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "viewer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<StoryView> storyViews = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
     private Set<Like> likes = new LinkedHashSet<>();
@@ -78,5 +87,23 @@ public class User {
     public int calculateFollowings(){
         return this.followings.size();
     }
+
+    public boolean hasViewedAllStoriesOf(User otherUser) {
+        // Get all story IDs of the other user
+        Set<Integer> otherUserStoryIds = otherUser.getStories().stream()
+                .map(Story::getId)
+                .collect(Collectors.toSet());
+
+        // Get all story IDs viewed by "this" user that belong to the other user
+        Set<Integer> viewedStoryIds = this.storyViews.stream()
+                .map(StoryView::getStory)
+                .filter(story -> story.getUser().equals(otherUser))
+                .map(Story::getId)
+                .collect(Collectors.toSet());
+
+        // Return true if every story ID from the other user is in the viewed list
+        return viewedStoryIds.containsAll(otherUserStoryIds);
+    }
+
 
 }

@@ -46,6 +46,12 @@ public class Event {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @Column(name = "event_time")
+    private Instant eventTime;
+
+    @Column(name = "price", precision = 10, scale = 2)
+    private java.math.BigDecimal price;
+
     @OneToMany(mappedBy = "event" , cascade = CascadeType.REMOVE, orphanRemoval = true)
     private Set<EventComment> eventComments = new LinkedHashSet<>();
 
