@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
-
 /**
  * Service responsible for authentication-related operations such as login,
  * refreshing access tokens, and retrieving the current authenticated user.
@@ -30,12 +29,17 @@ public class AuthService {
     private final JwtService jwtService;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     private Integer generateCode(){
         Random random = new Random();
-        Integer code =  100000 + random.nextInt(999999);
-        System.out.println("Code: " + code);
-        return code;
+        return 100000 + random.nextInt(900000); // Fixed range to ensure 6 digits
+    }
+
+    private void generateAndSendVerificationCode(User user, String purpose) {
+        String code = String.valueOf(generateCode());
+        user.setVerificationCode(passwordEncoder.encode(code));
+        emailService.sendVerificationCode(user.getEmail(), code, purpose);
     }
 
     /**
@@ -46,7 +50,7 @@ public class AuthService {
     public User getCurrentUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        var principal =  authentication.getPrincipal();
+        var principal = authentication.getPrincipal();
         if ("anonymousUser".equals(principal)) {
             return null;
         }
@@ -65,16 +69,17 @@ public class AuthService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getIdentifier(), request.getPassword()));
 
         // If authentication succeeds, fetch the user and generate tokens
-        User user = userRepository.findByUsernameOrEmail(request.getIdentifier()).orElseThrow(() -> new BadCredentialsException("User not found after authentication"));
+        User user = userRepository.findByUsernameOrEmail(request.getIdentifier())
+                .orElseThrow(() -> new BadCredentialsException("User not found after authentication"));
 
-        //  Check if user is verified
-        if(!user.getIsVerified()) {
-            // Generate code , send an email and return an error
-            String code = String.valueOf(generateCode());
-            user.setVerificationCode(passwordEncoder.encode(code));
+        // Check if user is verified
+        if (!user.getIsVerified()) {
+            // Generate code and send email
+            generateAndSendVerificationCode(user, "login");
             userRepository.save(user);
             throw new BadCredentialsException("User is not verified. An email has been sent to your email for verification.");
         }
+
         var accessToken = jwtService.generateAccessToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
 
@@ -98,98 +103,94 @@ public class AuthService {
         return jwtService.generateAccessToken(user);
     }
 
-
     @Transactional
     public UserDto registerUser(RegisterUserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateUserException("The provide email already exists");
+            throw new DuplicateUserException("The provided email already exists");
         }
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new DuplicateUserException("The provided username already exists");
         }
+
         User user = userMapper.toEntity(request);
 
-        //  Create a verification code and send email
-        String code = String.valueOf(generateCode());
-
-        System.out.println(code);
-        //  Set password , isVerified , encoded verification_code
+        // Set password and initial verification status
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setVerificationCode(passwordEncoder.encode(code));
         user.setIsVerified(false);
-        userRepository.save(user);
 
+        // Generate verification code and send email
+        generateAndSendVerificationCode(user, "registration");
+
+        userRepository.save(user);
         return userMapper.toDto(user);
     }
 
-
-    public void changeUserPassword(Integer user_id , ChangeUserPasswordRequest request){
-        //  Get user
+    public void changeUserPassword(Integer user_id, ChangeUserPasswordRequest request) {
+        // Get user
         User user = userRepository.findById(user_id).orElseThrow();
 
-        //  Compare user password
+        // Compare user password
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new RuntimeException("Current password is incorrect");
         }
 
-        //  Change password
+        // Change password
         String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
         user.setPassword(newEncodedPassword);
 
-        //  Save user
+        // Save user
         userRepository.save(user);
     }
 
     @Transactional
-    public User verifyUserAccount(VerifyAccountRequest request){
-        //  Get user
-        User user = userRepository.findByUsernameOrEmail(request.getIdentifier()).orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
+    public User verifyUserAccount(VerifyAccountRequest request) {
+        // Get user
+        User user = userRepository.findByUsernameOrEmail(request.getIdentifier())
+                .orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
 
-        //  Compare user verification code
+        // Compare user verification code
         if (!passwordEncoder.matches(request.getCode(), user.getVerificationCode())) {
             throw new RuntimeException("Provided code is incorrect");
         }
 
-        //  Update user
+        // Update user
         user.setIsVerified(true);
         user.setVerificationCode("");
 
-        //  Save user
+        // Save user
         userRepository.save(user);
         return user;
     }
 
-
     @Transactional
-    public UserDto requestResetPassword(String identifier){
-        //  Get user
-        User user = userRepository.findByUsernameOrEmail(identifier).orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
-        //  Create code and send email
-        String code = String.valueOf(generateCode());
+    public UserDto requestResetPassword(String identifier) {
+        // Get user
+        User user = userRepository.findByUsernameOrEmail(identifier)
+                .orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
 
-        //  Set password , isVerified , encoded verification_code
-        user.setVerificationCode(passwordEncoder.encode(code));
+        // Generate code and send email
+        generateAndSendVerificationCode(user, "password_reset");
 
         userRepository.save(user);
         return userMapper.toDto(user);
     }
 
     @Transactional
-    public UserDto setNewPassword(SetNewPasswordRequest request){
-        //  Get user
-        User user = userRepository.findByUsernameOrEmail(request.getIdentifier()).orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
+    public UserDto setNewPassword(SetNewPasswordRequest request) {
+        // Get user
+        User user = userRepository.findByUsernameOrEmail(request.getIdentifier())
+                .orElseThrow(() -> new ResourceNotFoundException("The provided user doesn't exist."));
 
-        //  Compare user verification code
+        // Compare user verification code
         if (!passwordEncoder.matches(request.getCode(), user.getVerificationCode())) {
             throw new RuntimeException("Provided code is incorrect");
         }
 
-        //  Update user password
+        // Update user password
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setVerificationCode("");
 
         userRepository.save(user);
         return userMapper.toDto(user);
     }
-
 }
