@@ -14,6 +14,7 @@ public interface UserLikedPostsMapper {
     @Mapping(target = "imageUrl", source = "post.imageUrl")
     @Mapping(target = "caption", source = "post.caption")
     @Mapping(target = "createdAt", source = "post.createdAt")
+    @Mapping(target = "ownerId", source = "post.user.id")
 
     @Mapping(target = "isLiked", ignore = true)
     @Mapping(target = "isSaved", ignore = true)

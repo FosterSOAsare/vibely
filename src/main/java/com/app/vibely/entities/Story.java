@@ -8,6 +8,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,5 +36,11 @@ public class Story {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<StoryView> storyViews = new ArrayList<>();
+
+    public boolean hasViewedStory(Integer viewerId) {
+        return this.storyViews.stream().anyMatch(storyView -> storyView.getViewer().getId().equals(viewerId));
+    }
 
 }

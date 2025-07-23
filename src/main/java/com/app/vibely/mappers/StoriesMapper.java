@@ -11,5 +11,7 @@ public interface StoriesMapper {
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.username", target = "username")
     @Mapping(source = "user.profilePicture", target = "profilePicture")
+
+    @Mapping(target = "viewed", ignore = true)
     StoriesDto toDto(Story story);
 }
