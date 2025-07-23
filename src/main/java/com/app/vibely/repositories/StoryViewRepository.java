@@ -1,5 +1,6 @@
 package com.app.vibely.repositories;
 
+import com.app.vibely.dtos.StoryViewerDto;
 import com.app.vibely.entities.Story;
 import com.app.vibely.entities.StoryView;
 import com.app.vibely.entities.User;
@@ -12,6 +13,8 @@ import java.util.List;
 public interface StoryViewRepository extends JpaRepository<StoryView, Integer> {
   boolean existsByStoryAndViewer(Story story, User viewer);
 
-  @Query("SELECT sv.viewer FROM StoryView sv WHERE sv.story = :story")
-  List<User> findViewersByStory(@Param("story") Story story);
+  @Query("SELECT sv FROM StoryView sv WHERE sv.story = :story ORDER BY viewedAt DESC")
+  List<StoryView> findViewersByStory(@Param("story") Story story);
+
+  boolean existsByStoryIdAndViewerId(Integer storyId, Integer viewerId);
 }

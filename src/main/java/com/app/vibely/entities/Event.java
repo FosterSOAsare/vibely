@@ -86,7 +86,7 @@ public class Event {
 
     public List<String> createEventImages(){
 
-        System.out.println(eventImages);
+//        System.out.println(eventImages);
         return this.eventImages.stream().map(EventImage::getImageUrl).toList();
     }
 
