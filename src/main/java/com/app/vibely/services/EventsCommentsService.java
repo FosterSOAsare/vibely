@@ -6,6 +6,7 @@ import com.app.vibely.entities.*;
 import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.mappers.EventsCommentsMapper;
 import com.app.vibely.repositories.*;
+import com.app.vibely.services.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ public class EventsCommentsService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final EventsCommentsMapper eventsCommentsMapper;
+    private final NotificationService notificationService;
 
     // ✅ Create a comment
     @Transactional
@@ -40,7 +42,10 @@ public class EventsCommentsService {
         comment.setText(text);
         comment.setCreatedAt(Instant.now());
 
-        return commentRepository.save(comment);
+        EventComment savedComment = commentRepository.save(comment);
+        // Trigger notification
+        notificationService.createEventCommentNotification(eventId, userId, event.getUser().getId());
+        return savedComment;
     }
 
     // ✅ Delete a comment

@@ -10,6 +10,7 @@ import com.app.vibely.mappers.PostLikesMapper;
 import com.app.vibely.repositories.LikeRepository;
 import com.app.vibely.repositories.PostRepository;
 import com.app.vibely.repositories.UserRepository;
+import com.app.vibely.services.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ public class PostLikesService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostLikesMapper postLikesMapper;
+    private final NotificationService notificationService;
 
     // ✅ Add or remove like (toggle)
     @Transactional
@@ -45,6 +47,8 @@ public class PostLikesService {
             like.setUser(user);
             like.setCreatedAt(Instant.now());
             likeRepository.save(like);
+            // Trigger notification
+            notificationService.createLikeNotification(postId, userId, post.getUser().getId());
         }
     }
 

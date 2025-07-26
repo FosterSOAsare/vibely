@@ -193,4 +193,41 @@ public class NotificationService {
                                   notificationsPage.getTotalPages(), notificationsPage.hasNext(), 
                                   notificationsPage.hasPrevious());
     }
+
+
+    public Notification createEventLikeNotification(Integer eventId, Integer likedByUserId, Integer eventOwnerId) {
+        if (likedByUserId.equals(eventOwnerId)) {
+            return null; // Don't notify users about their own actions
+        }
+
+        User eventOwner = userRepository.findById(eventOwnerId).orElseThrow();
+        User likedByUser = userRepository.findById(likedByUserId).orElseThrow();
+
+        return createNotification(
+                eventOwner,
+                likedByUser.getUsername() + " liked your event",
+                "LIKE",
+                eventId,
+                "EVENT",
+                likedByUser
+        );
+    }
+
+    public Notification createEventCommentNotification(Integer eventId, Integer commenterId, Integer eventOwnerId) {
+        if (commenterId.equals(eventOwnerId)) {
+            return null; // Don't notify users about their own actions
+        }
+
+        User eventOwner = userRepository.findById(eventOwnerId).orElseThrow();
+        User commenter = userRepository.findById(commenterId).orElseThrow();
+
+        return createNotification(
+                eventOwner,
+                commenter.getUsername() + " commented on your event",
+                "COMMENT",
+                eventId,
+                "EVENT",
+                commenter
+        );
+    }
 }
