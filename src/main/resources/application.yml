@@ -7,6 +7,18 @@ spring:
         accessTokenExpiration: 604800
         refreshTokenExpiration: 2592000
 
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        password: ${EMAIL_PASSWORD}
+        username: ${EMAIL_USERNAME}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
+
     datasource:
         url: ${JDBC_DATABASE_URL}
         username: ${DB_USERNAME}
