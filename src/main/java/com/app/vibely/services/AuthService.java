@@ -33,7 +33,7 @@ public class AuthService {
 
     private Integer generateCode(){
         Random random = new Random();
-        Integer code =  100000 + random.nextInt(999999);
+        Integer code = 100000 + random.nextInt(900000); // This ensures range 100000-999999 (6 digits)
         System.out.println("Code: " + code);
         return code;
     }

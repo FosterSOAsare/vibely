@@ -5,7 +5,6 @@ import com.app.vibely.entities.Message;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 
 @RestController
 public class Homepage {

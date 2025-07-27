@@ -25,6 +25,8 @@ public class UserDto {
     private String gender;
     private Integer followings;
     private Integer followers;
+    private Integer posts;
+    private Integer events;
     private Boolean isFollowing;
     private Instant createdAt;
 

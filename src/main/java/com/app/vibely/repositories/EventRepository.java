@@ -9,4 +9,5 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     Page<Event> findByUserIdOrderByCreatedAtDesc(Integer userId, Pageable pageable);
     Page<Event> findByUserIdAndIdLessThanEqualOrderByCreatedAtDesc(Integer userId, Integer id, Pageable pageable);
     Page<Event> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    long countByUserId(Integer userId);
 }

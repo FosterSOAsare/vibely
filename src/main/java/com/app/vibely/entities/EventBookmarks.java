@@ -12,7 +12,9 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "event_bookmarks")
+@Table(name = "event_bookmarks", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_id", "event_id"})
+})
 public class EventBookmarks {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,42 +14,42 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventsDto {
-    private Integer id;
-
-    @JsonProperty("owner_email")
-    private String ownerEmail;
-
+    private String name;
+    
     private String username;
-
-    @JsonProperty("isFollowing")
-    private Boolean isFollowing;
-
+    
     @JsonProperty("profile_picture")
     private String profilePicture;
-
+    
+    private List<String> images;
+    
     private String description;
-
-    private Integer comments;
-
-    private Integer likes;
-
+    
     @JsonProperty("isLiked")
     private Boolean isLiked;
-
-    private List<String> images;
-
-    @JsonProperty("createdAt")
-    private Instant createdAt;
-
-    private List<Double> coordinates;
-
+    
     private String location;
-
+    
+    private List<Double> coordinates;
+    
+    private Integer comments;
+    
+    private String id;
+    
     @JsonProperty("isSaved")
     private Boolean isSaved;
-
+    
+    private Integer likes;
+    
+    @JsonProperty("owner_id")
+    private Integer ownerId;
+    
+    @JsonProperty("isFollowing")
+    private Boolean isFollowing;
+    
+    @JsonProperty("createdAt")
+    private Instant createdAt;
+    
     @JsonProperty("eventTime")
     private Instant eventTime;
-
-    private java.math.BigDecimal price;
 }

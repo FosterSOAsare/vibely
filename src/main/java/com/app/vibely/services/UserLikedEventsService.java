@@ -35,10 +35,11 @@ public class UserLikedEventsService {
             EventsDto eventDto =  userLikedEventsMapper.toDto(like);
 
 //            set isLiked, isSaved , isFollowing, comments , likes , coordinates and images
+            Integer eventId = Integer.parseInt(eventDto.getId());
             eventDto.setIsLiked(true);
-            eventDto.setIsSaved(bookmarksService.isEventSaved(eventDto.getId() , currentUserId));
-            eventDto.setLikes(likesService.calculateEventLikes(eventDto.getId()));
-            eventDto.setComments(commentsService.calculatePostComments(eventDto.getId()));
+            eventDto.setIsSaved(bookmarksService.isEventSaved(eventId , currentUserId));
+            eventDto.setLikes(likesService.calculateEventLikes(eventId));
+            eventDto.setComments(commentsService.calculatePostComments(eventId));
             eventDto.setIsFollowing(followRepository.checkIfUserIsFollowed(like.getEvent().getUser().getId() , currentUserId));
             eventDto.setImages(eventsService.createEventImages(like.getEvent().getEventImages()));
             eventDto.setCoordinates(eventsService.createCoordinates(like.getEvent().getCoordinatesLat(), like.getEvent().getCoordinatesLng()));
