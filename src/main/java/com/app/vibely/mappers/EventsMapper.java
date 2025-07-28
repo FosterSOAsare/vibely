@@ -10,8 +10,9 @@ public interface EventsMapper {
     @Mapping(target = "comments", expression = "java(event.calculateComments())")
     @Mapping(target = "likes", expression = "java(event.calculateLikes())")
     @Mapping(target = "coordinates", expression = "java(event.createCoordinates())")
+    @Mapping(target = "id", expression = "java(event.getId().toString())")
+    @Mapping(target = "ownerId", source = "user.id")
     @Mapping(target = "profilePicture", source = "user.profilePicture")
-    @Mapping(target = "ownerEmail", source = "user.email")
     @Mapping(target = "username", source = "user.username")
     @Mapping(target = "images", expression = "java(event.createEventImages())")
 
@@ -19,6 +20,5 @@ public interface EventsMapper {
     @Mapping(target = "isSaved", ignore = true)
     @Mapping(target = "isFollowing", ignore = true)
     @Mapping(target = "eventTime", source = "eventTime")
-    @Mapping(target = "price", source = "price")
     EventsDto toDto(Event event);
 }

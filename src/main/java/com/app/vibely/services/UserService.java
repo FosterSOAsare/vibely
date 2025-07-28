@@ -67,6 +67,23 @@ public class UserService {
         return new PagedResponse<>(dtos, page, size, usersPage.getTotalElements(), usersPage.getTotalPages(), usersPage.hasNext(), usersPage.hasPrevious());
     }
 
+    // ✅ Search users with pagination
+    public PagedResponse<UserDto> searchUsers(int page, int size, Integer currentUserid, String searchQuery) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<User> usersPage = userRepository.findByUsernameOrNameContainingIgnoreCase(searchQuery, pageable);
+
+        // Convert user to userDto
+        List<UserDto> dtos = usersPage.getContent().stream()
+                .map((user) -> {
+                    UserDto userDto = userMapper.toDto(user);
+                    userDto.setIsFollowing(followRepository.checkIfUserIsFollowed(user.getId(), currentUserid));
+                    return userDto;
+                })
+                .toList();
+
+        return new PagedResponse<>(dtos, page, size, usersPage.getTotalElements(), usersPage.getTotalPages(), usersPage.hasNext(), usersPage.hasPrevious());
+    }
+
     public UserDto getUser(Integer userId , Integer currentUserid) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("The provided user id doesn't exist."));
         // Convert user to userDto

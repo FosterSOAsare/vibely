@@ -1,29 +1,29 @@
 spring:
-  application:
-    name: vibely
+    application:
+        name: vibely
 
-  jwt:
-    secret: ${JWT_SECRET}
-    accessTokenExpiration: 43200
-    refreshTokenExpiration: 604800
+    jwt:
+        secret: ${JWT_SECRET}
+        accessTokenExpiration: 604800
+        refreshTokenExpiration: 2592000
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    password: ${EMAIL_PASSWORD}
-    username: ${EMAIL_USERNAME}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        password: ${EMAIL_PASSWORD}
+        username: ${EMAIL_USERNAME}
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
 
-  datasource:
-    url: ${JDBC_DATABASE_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    hikari:
-      max-lifetime: 300000
-      idle-timeout: 30000
-      validation-timeout: 5000
+    datasource:
+        url: ${JDBC_DATABASE_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        hikari:
+            max-lifetime: 300000
+            idle-timeout: 30000
+            validation-timeout: 5000

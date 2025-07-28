@@ -23,4 +23,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("SELECT u FROM User u WHERE u.username = :credential OR u.email = :credential")
     Optional<User> findByUsernameOrEmail(@Param("credential") String credential);
+
+    @Query("SELECT u FROM User u WHERE " +
+           "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+           "LOWER(u.name) LIKE LOWER(CONCAT('%', :search, '%'))")
+    Page<User> findByUsernameOrNameContainingIgnoreCase(@Param("search") String search, Pageable pageable);
 }
