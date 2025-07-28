@@ -1,37 +1,36 @@
 spring:
-  application:
-    name: vibely
+    application:
+        name: vibely
+    flyway:
+        enabled: true
+        validate-on-migrate: false
+        out-of-order: true
+        clean-disabled: false
+    jpa:
+        hibernate:
+        ddl-auto: validate # This ensures Hibernate doesn't interfere with Flyway
+    jwt:
+        secret: ${JWT_SECRET}
+        accessTokenExpiration: 43200
+        refreshTokenExpiration: 604800
 
-  flyway:
-    enabled: true
-    validate-on-migrate: false
-    out-of-order: true
-    clean-disabled: false
-  jpa:
-    hibernate:
-      ddl-auto: validate  # This ensures Hibernate doesn't interfere with Flyway
-  jwt:
-    secret: ${JWT_SECRET}
-    accessTokenExpiration: 43200
-    refreshTokenExpiration: 604800
+        mail:
+            host: smtp.gmail.com
+            port: 587
+            password: ${EMAIL_PASSWORD}
+            username: ${EMAIL_USERNAME}
+            properties:
+                mail:
+                    smtp:
+                        auth: true
+                        starttls:
+                            enable: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    password: ${EMAIL_PASSWORD}
-    username: ${EMAIL_USERNAME}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-
-  datasource:
-    url: ${JDBC_DATABASE_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    hikari:
-      max-lifetime: 300000
-      idle-timeout: 30000
-      validation-timeout: 5000
+    datasource:
+        url: ${JDBC_DATABASE_URL}
+        username: ${DB_USERNAME}
+        password: ${DB_PASSWORD}
+        hikari:
+            max-lifetime: 300000
+            idle-timeout: 30000
+            validation-timeout: 5000

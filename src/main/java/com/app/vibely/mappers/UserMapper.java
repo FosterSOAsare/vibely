@@ -6,12 +6,15 @@ import com.app.vibely.entities.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
-public interface UserMapper {
+@Mapper(componentModel = "spring", unmappedTargetPolicy = org.mapstruct.ReportingPolicy.IGNORE)
+public abstract class UserMapper {
+    
     @Mapping(target = "followings" , expression = "java(user.calculateFollowings())")
     @Mapping(target = "followers" , expression = "java(user.calculateFollowers())")
+    @Mapping(target = "posts" , expression = "java(user.calculatePosts())")
+    @Mapping(target = "events" , expression = "java(user.calculateEvents())")
     @Mapping(target = "isFollowing", ignore = true)
-    UserDto toDto(User user);
+    public abstract UserDto toDto(User user);
 
-    User toEntity(RegisterUserRequest request);
+    public abstract User toEntity(RegisterUserRequest request);
 }

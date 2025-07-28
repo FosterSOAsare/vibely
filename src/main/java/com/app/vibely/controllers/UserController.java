@@ -30,10 +30,22 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<PagedResponse<UserDto>> getAllUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
+    public ResponseEntity<PagedResponse<UserDto>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "30") int size,
+            @RequestParam(required = false) String search,
+            Principal principal) {
         Integer currentUserId = Integer.parseInt(principal.getName());
-        PagedResponse<UserDto> userDtos = userService.getUsers(page, size , currentUserId );
-        return ResponseEntity.ok(userDtos);
+        
+        // If search parameter is provided and not empty, use search functionality
+        if (search != null && !search.trim().isEmpty()) {
+            PagedResponse<UserDto> userDtos = userService.searchUsers(page, size, currentUserId, search.trim());
+            return ResponseEntity.ok(userDtos);
+        } else {
+            // Otherwise, return all users
+            PagedResponse<UserDto> userDtos = userService.getUsers(page, size, currentUserId);
+            return ResponseEntity.ok(userDtos);
+        }
     }
 
     @GetMapping("/profile")

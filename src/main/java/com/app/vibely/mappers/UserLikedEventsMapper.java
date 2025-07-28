@@ -8,12 +8,15 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = PostMapper.class)
 public interface UserLikedEventsMapper {
     @Mapping(target = "profilePicture", source = "event.user.profilePicture")
-    @Mapping(target = "ownerEmail", source = "event.user.email")
+    @Mapping(target = "ownerId", source = "event.user.id")
     @Mapping(target = "username", source = "event.user.username")
-    @Mapping(target = "id", source = "event.id")
+    @Mapping(target = "id", expression = "java(like.getEvent().getId().toString())")
+    @Mapping(target = "name", source = "event.name")
     @Mapping(target = "description", source = "event.description")
     @Mapping(target = "createdAt", source = "event.createdAt")
     @Mapping(target = "location", source="event.location")
+    @Mapping(target = "coordinates", expression = "java(like.getEvent().createCoordinates())")
+    @Mapping(target = "eventTime", source = "event.eventTime")
 
     @Mapping(target = "images", ignore = true)
     @Mapping(target = "isLiked", ignore = true)
