@@ -10,7 +10,6 @@ import com.app.vibely.mappers.PostCommentsMapper;
 import com.app.vibely.repositories.CommentRepository;
 import com.app.vibely.repositories.PostRepository;
 import com.app.vibely.repositories.UserRepository;
-import com.app.vibely.services.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;

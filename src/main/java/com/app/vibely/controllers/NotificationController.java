@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -26,12 +28,17 @@ public class NotificationController {
 
     // Mark a specific notification as read
     @PostMapping("/mark-as-read/{notificationId}")
-    public ResponseEntity<Void> markAsRead(
+    public ResponseEntity<Map<String, Object>> markAsRead(
             @PathVariable Integer notificationId,
             Principal principal
     ) {
         Integer userId = Integer.parseInt(principal.getName());
         notificationService.markAsRead(notificationId, userId);
-        return ResponseEntity.ok().build();
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Notification marked as read");
+        
+        return ResponseEntity.ok(response);
     }
 }

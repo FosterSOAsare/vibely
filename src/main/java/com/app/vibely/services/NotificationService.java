@@ -74,7 +74,7 @@ public class NotificationService {
         return createNotification(
             user,
             "New event: " + eventTitle,
-            "/events?eventId=" + eventId + "&userId=" + eventCreatorId + "&username=" + eventCreator.getUsername()
+            "/account/user/[username]/events?eventId=" + eventId + "&userId=" + eventCreatorId + "&username=" + eventCreator.getUsername()
         );
     }
 
@@ -89,7 +89,7 @@ public class NotificationService {
         return createNotification(
                 eventOwner,
                 likedByUser.getUsername() + " liked your event",
-                "/events?eventId=" + eventId + "&userId=" + eventOwnerId + "&username=" + eventOwner.getUsername()
+                "/account/user/[username]/events?eventId=" + eventId + "&userId=" + eventOwnerId + "&username=" + eventOwner.getUsername()
         );
     }
 
@@ -104,7 +104,7 @@ public class NotificationService {
         return createNotification(
                 eventOwner,
                 commenter.getUsername() + " commented on your event",
-                "/events?eventId=" + eventId + "&userId=" + eventOwnerId + "&username=" + eventOwner.getUsername()
+                "/account/user/[username]/events?eventId=" + eventId + "&userId=" + eventOwnerId + "&username=" + eventOwner.getUsername()
         );
     }
 
@@ -126,7 +126,17 @@ public class NotificationService {
         notificationRepository.deleteAllNotifications();
     }
 
-    // Get unread notifications for a user and delete all notifications
+    // Get all notifications for a user
+    @Transactional
+    public List<NotificationDto> getAllNotifications(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        
+        // Get all notifications for the user
+        List<NotificationDto> allNotifications = notificationRepository.findByUserOrderByCreatedAtDesc(user).stream().map(notificationMapper::toDto).toList();
+        return allNotifications;
+    }
+
+    // Get unread notifications for a user
     @Transactional
     public List<NotificationDto> getUnreadNotifications(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow();

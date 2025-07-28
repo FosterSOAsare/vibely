@@ -8,7 +8,6 @@ import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.mappers.FollowMapper;
 import com.app.vibely.repositories.FollowRepository;
 import com.app.vibely.repositories.UserRepository;
-import com.app.vibely.services.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
