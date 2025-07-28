@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -80,6 +79,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Post> posts = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<Event> events = new LinkedHashSet<>();
+
     public int calculateFollowers(){
         return this.followers.size();
     }
@@ -88,21 +90,12 @@ public class User {
         return this.followings.size();
     }
 
-    public boolean hasViewedAllStoriesOf(User otherUser) {
-        // Get all story IDs of the other user
-        Set<Integer> otherUserStoryIds = otherUser.getStories().stream()
-                .map(Story::getId)
-                .collect(Collectors.toSet());
+    public int calculatePosts(){
+        return this.posts.size();
+    }
 
-        // Get all story IDs viewed by "this" user that belong to the other user
-        Set<Integer> viewedStoryIds = this.storyViews.stream()
-                .map(StoryView::getStory)
-                .filter(story -> story.getUser().equals(otherUser))
-                .map(Story::getId)
-                .collect(Collectors.toSet());
-
-        // Return true if every story ID from the other user is in the viewed list
-        return viewedStoryIds.containsAll(otherUserStoryIds);
+    public int calculateEvents(){
+        return this.events.size();
     }
 
 

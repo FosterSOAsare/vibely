@@ -41,7 +41,6 @@ public class EventsDto {
     
     private Integer likes;
     
-    @JsonProperty("owner_id")
     private Integer ownerId;
     
     @JsonProperty("isFollowing")
