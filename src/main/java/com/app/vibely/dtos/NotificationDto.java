@@ -10,17 +10,10 @@ public class NotificationDto {
     private String message;
     private Boolean isRead;
     private Instant createdAt;
-    private String type;
-    private Integer relatedEntityId;
-    private String relatedEntityType;
+    private String link;
 
     // User who received the notification
     private Integer userId;
     private String username;
     private String profilePicture;
-
-    // User who triggered the notification
-    private Integer triggeredByUserId;
-    private String triggeredByUsername;
-    private String triggeredByProfilePicture;
 }

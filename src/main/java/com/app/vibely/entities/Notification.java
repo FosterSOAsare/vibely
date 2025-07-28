@@ -35,17 +35,6 @@ public class Notification {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    // New columns for enhanced notifications
-    @Column(name = "type", length = 50)
-    private String type;
-
-    @Column(name = "related_entity_id")
-    private Integer relatedEntityId;
-
-    @Column(name = "related_entity_type", length = 20)
-    private String relatedEntityType;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "triggered_by_user_id")
-    private User triggeredByUser;
+    @Column(name = "link", length = 500)
+    private String link;
 }
