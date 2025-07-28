@@ -11,6 +11,7 @@ public abstract class UserMapper {
     
     @Mapping(target = "followings" , expression = "java(user.calculateFollowings())")
     @Mapping(target = "followers" , expression = "java(user.calculateFollowers())")
+    @Mapping(target = "notifications" , expression = "java(user.calculateUnreadNotifications())")
     @Mapping(target = "posts" , expression = "java(user.calculatePosts())")
     @Mapping(target = "events" , expression = "java(user.calculateEvents())")
     @Mapping(target = "isFollowing", ignore = true)

@@ -1,12 +1,14 @@
 spring:
     application:
         name: vibely
-
-    jwt:
-        secret: ${JWT_SECRET}
-        accessTokenExpiration: 604800
-        refreshTokenExpiration: 2592000
-
+    flyway:
+        enabled: true
+        validate-on-migrate: false
+        out-of-order: true
+        clean-disabled: false
+    jpa:
+        hibernate:
+        ddl-auto: validate # This ensures Hibernate doesn't interfere with Flyway
     mail:
         host: smtp.gmail.com
         port: 587
@@ -18,7 +20,6 @@ spring:
                     auth: true
                     starttls:
                         enable: true
-
     datasource:
         url: ${JDBC_DATABASE_URL}
         username: ${DB_USERNAME}
@@ -27,3 +28,8 @@ spring:
             max-lifetime: 300000
             idle-timeout: 30000
             validation-timeout: 5000
+
+    jwt:
+        secret: ${JWT_SECRET}
+        accessTokenExpiration: 43200
+        refreshTokenExpiration: 604800

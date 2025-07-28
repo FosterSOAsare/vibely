@@ -29,7 +29,5 @@ public class UserDto {
     private Integer events;
     private Boolean isFollowing;
     private Instant createdAt;
-
-//    Add other fields here
-//    notifications
+    private Integer notifications;
 }

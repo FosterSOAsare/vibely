@@ -25,7 +25,6 @@ public class StoriesService {
     private final StoryRepository storyRepository;
     private final UserRepository userRepository;
     private final StoryViewRepository storyViewRepository;
-    private final UserMapper userMapper;
     private final StoriesMapper storiesMapper;
 
     public Story createStory(CreateStoryDto dto, Integer userId) {

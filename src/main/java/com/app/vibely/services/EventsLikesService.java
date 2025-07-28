@@ -6,6 +6,7 @@ import com.app.vibely.entities.*;
 import com.app.vibely.exceptions.ResourceNotFoundException;
 import com.app.vibely.mappers.EventsLikesMapper;
 import com.app.vibely.repositories.*;
+import com.app.vibely.services.NotificationService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ public class EventsLikesService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final EventsLikesMapper eventsLikesMapper;
+    private final NotificationService notificationService;
 
     // ✅ Add or remove like (toggle)
     @Transactional
@@ -40,6 +42,8 @@ public class EventsLikesService {
             like.setUser(user);
             like.setCreatedAt(Instant.now());
             likeRepository.save(like);
+            // Trigger notification
+            notificationService.createEventLikeNotification(eventId, userId, event.getUser().getId());
         }
     }
 

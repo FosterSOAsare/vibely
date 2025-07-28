@@ -90,6 +90,12 @@ public class User {
         return this.followings.size();
     }
 
+    public int calculateUnreadNotifications(){
+        return (int) this.notifications.stream()
+                .filter(notification -> !notification.getIsRead())
+                .count();
+    }
+
     public int calculatePosts(){
         return this.posts.size();
     }

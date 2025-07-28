@@ -13,9 +13,7 @@ public class VibelyApplication {
         Dotenv dotenv = Dotenv.configure().ignoreIfMalformed().ignoreIfMissing().load();
 
         // Inject each variable into system properties
-        dotenv.entries().forEach(entry -> {
-            System.setProperty(entry.getKey(), entry.getValue());
-        });
+        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 
         // Run Spring Boot
         SpringApplication.run(VibelyApplication.class, args);

@@ -30,6 +30,7 @@ public class PostCommentsService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostCommentsMapper postCommentsMapper;
+    private final NotificationService notificationService;
 
     // ✅ Create a comment
     @Transactional
@@ -44,7 +45,10 @@ public class PostCommentsService {
         comment.setText(text);
         comment.setCreatedAt(Instant.now());
 
-        return commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+        // Trigger notification
+        notificationService.createCommentNotification(postId, userId, post.getUser().getId());
+        return savedComment;
     }
 
     // ✅ Delete a comment

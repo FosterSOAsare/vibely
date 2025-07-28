@@ -29,6 +29,7 @@ public class PostLikesService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostLikesMapper postLikesMapper;
+    private final NotificationService notificationService;
 
     // ✅ Add or remove like (toggle)
     @Transactional
@@ -45,6 +46,8 @@ public class PostLikesService {
             like.setUser(user);
             like.setCreatedAt(Instant.now());
             likeRepository.save(like);
+            // Trigger notification
+            notificationService.createLikeNotification(postId, userId, post.getUser().getId());
         }
     }
 
