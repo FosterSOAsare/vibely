@@ -18,7 +18,7 @@ public class UserPostBookmarksController {
     private final UserPostBookmarksService userPostBookmarksService;
 
     // ✅ Get paginated bookmarks of logged-in user
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<PagedResponse<PostDto>> getMyBookmarks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         PagedResponse<PostDto> bookmarks = userPostBookmarksService.getBookmarksByUserId(userId, page, size);

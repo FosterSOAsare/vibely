@@ -16,7 +16,7 @@ public class PostCommentLikesController {
 
     private final PostCommentLikesService commentLikesService;
     // ✅ Toggle like (like or unlike a post comment)
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> toggleLike(@PathVariable Integer postId, @PathVariable Integer commentId    , Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         commentLikesService.toggleCommentLike(postId, commentId, userId);

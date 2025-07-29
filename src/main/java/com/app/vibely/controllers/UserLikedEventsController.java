@@ -17,7 +17,7 @@ public class UserLikedEventsController {
     private final UserLikedEventsService userLikedEventsService;
 
     // ✅ Get paginated liked posts of logged-in user
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<PagedResponse<EventsDto>> getMyLikedPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         PagedResponse<EventsDto> bookmarks = userLikedEventsService.getLikedEventsByUserId(userId, page, size);

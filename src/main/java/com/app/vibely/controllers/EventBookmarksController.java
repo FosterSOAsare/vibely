@@ -22,7 +22,7 @@ public class EventBookmarksController {
     private final PostBookmarksService postBookmarksService;
 
     // ✅ Toggle bookmark (save or un save an event)
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> toggleBookmark(@PathVariable Integer eventId, Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         eventsBookmarksService.toggleBookmark(eventId, userId);
@@ -30,7 +30,7 @@ public class EventBookmarksController {
     }
 
     // ✅ Get paginated bookmarks on an event
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<PagedResponse<EventsBookmarksDto>> getPostBookmarks(@PathVariable Integer eventId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
         PagedResponse<EventsBookmarksDto> bookmarks = eventsBookmarksService.getBookmarksByEventId(eventId, page, size);
         return ResponseEntity.ok(bookmarks);

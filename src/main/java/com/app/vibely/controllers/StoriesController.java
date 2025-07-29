@@ -22,7 +22,7 @@ public class StoriesController {
     private final StoriesMapper storyMapper;
 
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<StoriesDto> createStory(@Valid @RequestBody CreateStoryDto createStoryDto , Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         Story story = storyService.createStory(createStoryDto, userId);

@@ -20,7 +20,7 @@ public class PostBookmarksController {
     private final PostBookmarksService postBookmarksService;
 
     // ✅ Toggle bookmark (save or unsave a post)
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> toggleBookmark(@PathVariable Integer postId, Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         postBookmarksService.toggleBookmark(postId, userId);
@@ -28,7 +28,7 @@ public class PostBookmarksController {
     }
 
     // ✅ Get paginated bookmarks on a post
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<PagedResponse<PostBookmarksDto>> getPostBookmarks(@PathVariable Integer postId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
         PagedResponse<PostBookmarksDto> bookmarks = postBookmarksService.getBookmarksByPostId(postId, page, size);
         return ResponseEntity.ok(bookmarks);

@@ -24,7 +24,7 @@ public class PostsController {
     private final AuthService authService;
 
     // Get all posts with pagination
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<PagedResponse<PostDto>> getAllPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size
     ) {
         User user = authService.getCurrentUser();

@@ -18,7 +18,7 @@ public class UserEventBookmarksController {
     private final UserEventBookmarksService userEventBookmarksService;
 
     // ✅ Get paginated bookmarks of logged-in user
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<PagedResponse<EventsDto>> getMyBookmarks(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size , Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         PagedResponse<EventsDto> bookmarks = userEventBookmarksService.getBookmarksByUserId(userId, page, size);

@@ -64,6 +64,7 @@ public class PostService {
             // Check if user liked or saved this post
             dto.setIsLiked(post.isLiked(userId));
             dto.setIsSaved(post.isSaved(userId));
+            dto.setIsFollowing(followRepository.checkIfUserIsFollowed(post.getUser().getId() , userId));
             return dto;
         }).toList();
 

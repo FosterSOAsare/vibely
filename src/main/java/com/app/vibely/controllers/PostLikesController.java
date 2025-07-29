@@ -19,7 +19,7 @@ public class PostLikesController {
     private final PostLikesService postLikesService;
 
     // ✅ Toggle like (like or unlike a post)
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> toggleLike(@PathVariable Integer postId, Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         postLikesService.toggleLike(postId, userId);
@@ -27,7 +27,7 @@ public class PostLikesController {
     }
 
     // ✅ Get paginated likes on a post
-    @GetMapping
+    @GetMapping("")
     public ResponseEntity<PagedResponse<PostLikesDto>> getPostLikes(@PathVariable Integer postId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int size) {
         PagedResponse<PostLikesDto> likes = postLikesService.getLikesByPostId(postId, page, size);
         return ResponseEntity.ok(likes);
