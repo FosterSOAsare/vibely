@@ -1,7 +1,6 @@
 package com.app.vibely.controllers;
 
 import com.app.vibely.services.EventCommentLikesService;
-import com.app.vibely.services.PostCommentLikesService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class EventCommentLikesController {
     private final EventCommentLikesService commentLikesService;
     // ✅ Toggle like (like or unlike an event comment)
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<?> toggleLike(@PathVariable Integer eventId, @PathVariable Integer commentId, Principal principal) {
         Integer userId = Integer.parseInt(principal.getName());
         commentLikesService.toggleCommentLike(eventId, commentId, userId);
